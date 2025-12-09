@@ -1,205 +1,247 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png"; // Place your logo in /src/assets/
-// import Footer from '../components/Footer'
-
-const whyByteCode = [
-  { title: "Interactive Learning", description: "Practice coding while learning concepts, no passive reading.", icon: "💻" },
-  { title: "Step-by-Step Courses", description: "Topics unlocked sequentially, building skills gradually.", icon: "📚" },
-  { title: "Gamified Progress", description: "Earn XP, badges, and rewards while mastering coding.", icon: "🏆" },
-  { title: "Expert-Verified Content", description: "Courses designed by experienced developers.", icon: "👨‍💼" },
-];
-
-const languages = [
-  { title: "Frontend", description: "HTML, CSS, JavaScript, React", color: "from-blue-900 to-cyan-700" },
-  { title: "Backend", description: "Node.js, Python, Java", color: "from-green-900 to-emerald-700" },
-  { title: "Mobile", description: "React Native, Flutter", color: "from-purple-900 to-pink-700" },
-  { title: "Database", description: "SQL, MongoDB, PostgreSQL", color: "from-orange-900 to-red-700" },
-];
-
-const features = [
-  { title: "In-Site Coding Support", description: "Practice exercises and challenges directly in your browser.", gradient: "from-blue-500/20 to-cyan-500/20" },
-  { title: "AI-Powered Assistance", description: "Get hints, explanations, and guided feedback without giving answers away.", gradient: "from-purple-500/20 to-pink-500/20" },
-  { title: "Discussion & Collaboration", description: "Ask questions, pair program, and learn with peers in real-time rooms.", gradient: "from-green-500/20 to-emerald-500/20" },
-  { title: "Gamified Progress", description: "Earn XP, unlock badges, and track your achievements as you progress.", gradient: "from-orange-500/20 to-red-500/20" },
-  { title: "Reference Library", description: "Access official docs, cheat sheets, and curated tutorials per topic.", gradient: "from-indigo-500/20 to-purple-500/20" },
-  { title: "Career Paths", description: "Structured learning paths for specific developer roles and goals.", gradient: "from-teal-500/20 to-blue-500/20" },
-];
-
-const LandingPage = () => {
-  const [showContent, setShowContent] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const containerRef = useRef(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const timer = setTimeout(() => setShowContent(true), 1200);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
+import logo from '../assets/logo.png'
+const StockTicker = () => {
+  const stocks = [
+    { sym: "AAPL", val: "+1.2%", up: true },
+    { sym: "BTC", val: "+5.4%", up: true },
+    { sym: "TSLA", val: "-0.8%", up: false },
+    { sym: "ETH", val: "+2.1%", up: true },
+    { sym: "BTC", val: "+5.4%", up: true },
+    { sym: "TSLA", val: "-0.8%", up: false },
+    { sym: "ETH", val: "+2.1%", up: true },
+    { sym: "NIFTY", val: "+0.5%", up: true },
+    { sym: "GOLD", val: "+0.1%", up: true },
+    { sym: "AMZN", val: "-1.2%", up: false },
+    { sym: "ETH", val: "+2.1%", up: true },
+    { sym: "NIFTY", val: "+0.5%", up: true },
+    { sym: "GOLD", val: "+0.1%", up: true },
+    { sym: "AMZN", val: "-1.2%", up: false },
+  ];
 
   return (
-    <div
-      ref={containerRef}
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-linear-to-br from-gray-900 via-black to-gray-900 text-white px-4"
-    >
-      {/* Animated Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div
-          className="absolute w-96 h-96 bg-linear-to-r from-blue-500/10 to-purple-500/10 rounded-full blur-3xl"
-          style={{
-            left: `${mousePosition.x / 20}px`,
-            top: `${mousePosition.y / 20}px`,
-            transform: "translate(-50%, -50%)",
-          }}
-        />
-        <div
-          className="absolute w-80 h-80 bg-linear-to-r from-cyan-500/10 to-green-500/10 rounded-full blur-3xl"
-          style={{
-            right: `${mousePosition.x / 25}px`,
-            bottom: `${mousePosition.y / 25}px`,
-            transform: "translate(50%, 50%)",
-          }}
-        />
-      </div>
-
-      {/* Logo + App Name */}
+    <div className="w-full overflow-hidden bg-[#F5E7C6] border-t border-[#222222] py-2 absolute bottom-0 z-20">
       <motion.div
-        initial={{ opacity: 0, scale: 0.7 }}
-        animate={{ opacity: 1, scale: 1, y: showContent ? 50 : 0 }}
-        transition={{ duration: 1.2, ease: "easeOut", type: "spring", stiffness: 100 }}
-        className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 z-10 py-20 font-transformer"
+        className="flex gap-8 whitespace-nowrap px-6"
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
       >
-        <motion.img
-          src={logo}
-          alt="ByteCode Logo"
-          className="w-24 h-24 md:w-28 md:h-28 lg:w-40 lg:h-40 drop-shadow-2xl"
-          initial={{ y: 30, opacity: 0, rotate: -180 }}
-          animate={{ y: 0, opacity: 1, rotate: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          whileHover={{ scale: 1.1, rotate: 5 }}
-        />
-        <motion.h1
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4, duration: 1, ease: "easeOut" }}
-          className="text-6xl md:text-7xl lg:text-8xl font-bold text-amber-200"
-        >
-          ByteCode
-        </motion.h1>
-      </motion.div>
-
-      {/* Main Content */}
-      <AnimatePresence>
-        {showContent && (
-          <>
-          <motion.div
-            initial={{ opacity: 0, y: 60 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1, type: "spring" }}
-            className="flex flex-col items-center text-center max-w-6xl space-y-20 mt-20 z-10 "
+        {[...stocks, ...stocks].map((s, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-2 text-xs md:text-sm font-mono tracking-tight"
           >
-            {/* Hero Section */}
-            <div className="space-y-6 py-20">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold animate-pulse font-ice">
-                Code-<span className="text-transparent bg-linear-to-r from-blue-400 to-cyan-400 bg-clip-text">Practice</span>-Master
-              </h2>
-              <p className="text-lg text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                Transform how you learn to code with our interactive, gamified platform.
-              </p>
-              <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-                <button
-                  onClick={() => navigate("/login")}
-                  className="px-8 py-4 bg-linear-to-r from-blue-600 to-cyan-600 text-white rounded-2xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-300"
-                >
-                  Login
-                </button>
-                <button
-                  onClick={() => navigate("/register")}
-                  className="px-8 py-4 bg-white/10 backdrop-blur-sm text-white rounded-2xl border border-white/20 shadow-2xl hover:bg-white/20 transition-all duration-300"
-                >
-                  Register
-                </button>
-              </div>
-            </div>
-
-            {/* Why ByteCode Section */}
-            <div className="w-full space-y-12">
-              <h3 className="text-3xl font-bold text-white">
-                Why <span className="text-transparent bg-linear-to-r from-blue-400 to-cyan-400 bg-clip-text">ByteCode</span>?
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {whyByteCode.map((item, i) => (
-                  <motion.div
-                    key={i}
-                    whileHover={{ scale: 1.08, y: -8, rotate: 2 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                    className="p-6 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 hover:border-white/20"
-                  >
-                    <div className="text-3xl mb-4">{item.icon}</div>
-                    <h4 className="text-xl font-semibold text-white mb-3">{item.title}</h4>
-                    <p className="text-gray-300 leading-relaxed">{item.description}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            {/* Languages & Features Section */}
-            <div className="w-full space-y-12">
-              <h3 className="text-3xl font-bold text-white">
-                Languages & <span className="text-transparent bg-linear-to-r from-green-400 to-emerald-400 bg-clip-text">Frameworks</span>
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {languages.map((item, i) => (
-                  <motion.div
-                    key={i}
-                    whileHover={{ scale: 1.08, y: -8, rotate: 2 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                    className={`p-6 bg-linear-to-br ${item.color} rounded-2xl shadow-2xl text-white group cursor-pointer hover:shadow-xl`}
-                  >
-                    <h4 className="text-3xl font-bold mb-3">{item.title}</h4>
-                    <p>{item.description}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            {/* Features Section */}
-            <div className="w-full space-y-12">
-              <h3 className="text-3xl font-bold text-white">
-                All-in-One <span className="text-transparent bg-linear-to-r from-purple-400 to-pink-400 bg-clip-text">Learning Experience</span>
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {features.map((item, i) => (
-                  <motion.div
-                    key={i}
-                    whileHover={{ scale: 1.08, y: -8, rotate: 2 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                    className={`p-6 bg-linear-to-br ${item.gradient} backdrop-blur-sm rounded-2xl border border-white/10 hover:border-white/20`}
-                  >
-                    <h4 className="text-xl font-semibold text-white mb-3">{item.title}</h4>
-                    <p className="text-gray-200 leading-relaxed">{item.description}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        {/* <Footer/> */}
-        </>
-        )}
-      </AnimatePresence>
+            <span className="font-semibold text-[#222222]">{s.sym}</span>
+            <span className={s.up ? "text-[#FF6D1F]" : "text-[#222222]"}>
+              {s.up ? "▲ " : "▼ "}
+              {s.val}
+            </span>
+          </div>
+        ))}
+      </motion.div>
     </div>
   );
 };
 
-export default LandingPage;
+const MockChart = () => (
+  <svg viewBox="0 0 200 100" className="w-full h-24 mt-2 overflow-visible">
+    {/* Grid Lines */}
+    {[25, 50, 75].map((y, i) => (
+      <line
+        key={i}
+        x1="0"
+        y1={y}
+        x2="200"
+        y2={y}
+        stroke="#F5E7C6"
+        strokeWidth="1"
+      />
+    ))}
+
+    {/* Line */}
+    <motion.path
+      d="M0,80 Q40,70 70,50 T120,35 T160,25 T200,15"
+      fill="none"
+      stroke="#FF6D1F"
+      strokeWidth="3"
+      strokeLinecap="round"
+      initial={{ pathLength: 0 }}
+      animate={{ pathLength: 1 }}
+      transition={{ duration: 2, ease: "easeInOut" }}
+    />
+
+    {/* Dot */}
+    <motion.circle
+      cx="200"
+      cy="15"
+      r="4"
+      fill="#FF6D1F"
+      animate={{ scale: [1, 1.4, 1] }}
+      transition={{ repeat: Infinity, duration: 1.8 }}
+    />
+  </svg>
+);
+
+export default function Landing() {
+  const navigate = useNavigate();
+  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const move = (e) => {
+      setMouse({
+        x: (e.clientX / window.innerWidth) * 20 - 10,
+        y: (e.clientY / window.innerHeight) * 20 - 10,
+      });
+    };
+    window.addEventListener("mousemove", move);
+    return () => window.removeEventListener("mousemove", move);
+  }, []);
+
+  const allocation = [
+    { label: "Stocks", val: "54%" },
+    { label: "Funds", val: "22%" },
+    { label: "Cash", val: "16%" },
+    { label: "Other", val: "8%" },
+  ];
+
+  return (
+    <div className="relative min-h-screen w-full bg-[#beb88d] text-[#222222] overflow-hidden font-sans">
+      {/* Background accent blobs using palette */}
+      <motion.div
+        className="absolute w-[340px] h-[340px] rounded-full"
+        style={{ backgroundColor: "#F5E7C6" }}
+        animate={{ x: mouse.x, y: mouse.y }}
+        transition={{ type: "spring", stiffness: 40 }}
+      />
+      <div className="absolute -bottom-32 -right-32 w-[360px] h-[360px] rounded-full bg-[#F5E7C6]" />
+
+      {/* Navbar */}
+      <nav className="absolute top-0 left-0 w-full px-6 md:px-10 py-5 flex items-center justify-between z-30">
+        <div className="flex items-center gap-3">
+          <img
+            src={logo}
+            alt="SmartFolio Logo"
+            className="w-20 h-20 object-contain"
+          />
+          
+        </div>
+        <div className="flex items-center gap-3 md:gap-4 text-1xl">
+          <button
+            onClick={() => navigate("/login")}
+            className="px-4 py-2 rounded-md hover:bg-[#F5E7C6] transition-colors"
+          >
+            Login
+          </button>
+          <button
+            onClick={() => navigate("/register")}
+            className="px-4 md:px-5 py-2 rounded-md bg-[#FF6D1F] text-[#FAF3E1] font-semibold hover:opacity-90 transition-opacity"
+          >
+            Get Started
+          </button>
+        </div>
+      </nav>
+
+      {/* Main Content */}
+      <div className="relative z-10 max-w-6xl mx-auto min-h-screen flex flex-col lg:flex-row items-center justify-center gap-12 md:gap-16 px-6 md:px-8">
+        {/* Left: Copy */}
+        <motion.div
+          className="flex-1 text-center lg:text-left space-y-6 pt-16 lg:pt-0"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+        >
+         
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#222222] bg-[#F5E7C6] text-2xl font-medium">
+            <span> SmartFolio : Portfolio &amp; Wealth Dashboard</span>
+          </div>
+
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight">
+            See your money
+            <br />
+            <span className="text-[#FF6D1F]">as a single picture.</span>
+          </h1>
+
+          <p className="text-sm md:text-base text-[#222222] max-w-md mx-auto lg:mx-0">
+            SmartFolio brings your stocks, funds and cash into one clean
+            dashboard — so you always know where you stand and what to do next.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-3 pt-2">
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => navigate("/register")}
+              className="px-7 py-3 rounded-lg bg-[#FF6D1F] text-[#FAF3E1] font-semibold text-sm md:text-base"
+            >
+              Start Tracking
+            </motion.button>
+            
+          </div>
+        </motion.div>
+
+        {/* Right: Card */}
+        <motion.div
+          className="flex-1 w-full max-w-sm bg-[#F5E7C6] border border-[#222222] rounded-3xl p-6 md:p-7"
+          initial={{ opacity: 0, scale: 0.95, x: 20 }}
+          animate={{ opacity: 1, scale: 1, x: 0 }}
+          transition={{ duration: 0.9 }}
+        >
+          {/* Header */}
+          <div className="flex items-start justify-between mb-6">
+            <div>
+              <p className="text-xs font-medium">Total Portfolio</p>
+              <p className="text-3xl md:text-4xl font-bold mt-1">$124,500</p>
+            </div>
+            <div className="px-2 py-1 rounded-md bg-[#FAF3E1] text-xs font-semibold text-[#FF6D1F]">
+              ▲ +14.2%
+            </div>
+          </div>
+
+          {/* Chart */}
+          <MockChart />
+
+          {/* Months */}
+          <div className="flex justify-between text-[10px] mt-2 text-[#222222]">
+            <span>Jan</span>
+            <span>Mar</span>
+            <span>May</span>
+            <span>Jul</span>
+            <span>Sep</span>
+          </div>
+
+          {/* Allocation */}
+          <div className="mt-6 space-y-3">
+            {allocation.map((a, i) => (
+              <div
+                key={i}
+                className="flex justify-between text-xs md:text-sm gap-4"
+              >
+                <span>{a.label}</span>
+                <span className="font-semibold">{a.val}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Tag Row */}
+          <div className="mt-6 flex flex-wrap gap-2 text-[10px] md:text-xs">
+            {["Goal-based planning", "Risk overview", "Simple export"].map(
+              (tag, i) => (
+                <span
+                  key={i}
+                  className="px-2 py-1 rounded-full border border-[#222222]"
+                >
+                  {tag}
+                </span>
+              )
+            )}
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Ticker */}
+      <StockTicker />
+    </div>
+  );
+}

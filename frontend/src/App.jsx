@@ -71,7 +71,7 @@ function App() {
         toastOptions={{
           duration: 4000,
           style: {
-            background: "#1f2937",
+            background: "#beb88d",
             color: "white",
             border: "1px solid #374151",
           },
