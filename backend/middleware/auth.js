@@ -11,7 +11,18 @@ const protect = async (req, res, next) => {
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      req.user = await User.findById(decoded.id).select('-password');
+      // If token was generated for a regular user it will contain an `id`.
+      // Admin tokens (created by the admin login) may not contain an id and
+      // instead carry role/isAdmin flags. Support both cases.
+      if (decoded && decoded.id) {
+        req.user = await User.findById(decoded.id).select('-password');
+      } else if (decoded && decoded.role === 'admin') {
+        // Create a minimal user-like object for admin-only tokens so downstream
+        // middleware (e.g., `admin`) can check `req.user.role`.
+        req.user = { role: 'admin' };
+      } else {
+        req.user = null;
+      }
 
       next();
     } catch (error) {

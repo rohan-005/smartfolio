@@ -14,6 +14,7 @@ const otpRoutes = require('./routes/otp');
 // const courseRoutes = require('./routes/courses');
 // const codeRoutes = require('./routes/code');
 // const courseProgressRoutes = require('./routes/courseProgress');
+const adminRoutes = require('./routes/admin');
 
 // Connect to database
 const connectdb = require('./config/connectdb');
@@ -30,6 +31,8 @@ app.use(cors({
 app.use(express.json());// Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/otp', otpRoutes);
+app.use('/api/admin', adminRoutes);
+
 // app.use('/api/courses', courseRoutes);
 // app.use('/api/code', codeRoutes);
 // app.use('/api/progress', courseProgressRoutes);

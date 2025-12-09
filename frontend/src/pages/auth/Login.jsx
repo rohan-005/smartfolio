@@ -38,10 +38,16 @@ export default function Login() {
     }
 
     toast.success("Welcome back! 🎯");
+
+    // Role-based navigation
     setTimeout(() => {
-      if (result.user.isApprovedByAdmin === false)
+      if (result.user.role === "admin") {
+        navigate("/admin/dashboard");
+      } else if (!result.user.isApprovedByAdmin) {
         navigate("/under-verification");
-      else navigate("/dashboard");
+      } else {
+        navigate("/dashboard");
+      }
     }, 1000);
   };
 

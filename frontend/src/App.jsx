@@ -19,6 +19,7 @@ import { Toaster } from "react-hot-toast";
 // import Courses from "./pages/Courses"; // Add this import
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import Profile from './pages/profile/Profile';
+import AdminDashboard from "./pages/admin_auth/AdminDashboard";
 // import CodeEditor from "./pages/CodeEditor";
 // import CourseDetail from "./pages/CourseDetail";
 // import ExerciseDetail from "./components/ExerciseDetail";
@@ -56,6 +57,7 @@ function App() {
             
             {/* forgot-password */}
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
 
             {/* profile update */}
             <Route path="/profile" element={
