@@ -120,6 +120,15 @@ export default function Login() {
             Create Account
           </Link>
         </div>
+        <div className="mt-8 text-center text-[#222222]">
+          {" "}
+          <Link
+            to="/"
+            className="text-[#FF6D1F] font-semibold underline"
+          >
+          &lt;-Back
+          </Link>
+        </div>
       </motion.div>
     </div>
   );

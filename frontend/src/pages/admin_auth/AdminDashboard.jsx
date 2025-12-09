@@ -32,7 +32,7 @@ export default function AdminDashboard() {
     // Check if user is admin
     if (userRole !== "admin") {
       toast.error("Access denied! Not an admin");
-      navigate("/dashboard");
+      navigate("/");
       return;
     }
 

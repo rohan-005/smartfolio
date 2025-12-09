@@ -1,8 +1,16 @@
-import { useAuth } from '../context/AuthContext';
-import { Navigate } from 'react-router-dom';
+import { useAuth } from "../context/AuthContext";
+import { Navigate, useLocation } from "react-router-dom";
 
-const ProtectedRoute = ({ children, adminOnly = false, requireAdminApproval = false }) => {
+const ProtectedRoute = ({
+  children,
+  adminOnly = false,
+  requireAdminApproval = false,
+}) => {
   const { user, loading } = useAuth();
+  const location = useLocation();
+
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("userRole");
 
   if (loading) {
     return (
@@ -12,19 +20,34 @@ const ProtectedRoute = ({ children, adminOnly = false, requireAdminApproval = fa
     );
   }
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
+  // Not logged in at all
+  if (!token) {
+    return (
+      <Navigate
+        to={location.pathname.startsWith("/admin") ? "/admin/login" : "/login"}
+        replace
+      />
+    );
   }
 
-  if (adminOnly && user.role !== 'admin') {
-    return <Navigate to="/dashboard" replace />;
+  // Role-based access control
+  if (adminOnly) {
+    if (role !== "admin") {
+      return <Navigate to="/dashboard" replace />;
+    }
+    return children; // Admin authenticated
   }
 
-  if (requireAdminApproval && user.isApprovedByAdmin === false) {
-    return <Navigate to="/under-verification" replace />;
+  // User routes (non-admin)
+  if (user) {
+    // If user not approved by admin
+    if (requireAdminApproval && user.isApprovedByAdmin === false) {
+      return <Navigate to="/under-verification" replace />;
+    }
+    return children; // Normal Access
   }
 
-  return children;
+  return <Navigate to="/login" replace />;
 };
 
 export default ProtectedRoute;

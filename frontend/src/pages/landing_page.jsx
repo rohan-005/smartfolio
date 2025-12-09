@@ -134,17 +134,17 @@ export default function Landing() {
           >
             Login
           </button>
-          <button
+          {/* <button
             onClick={() => navigate("/admin/login")}
-            className="px-4 py-2 rounded-md hover:bg-[#F5E7C6] transition-colors text-sm"
+            className="px-4 py-2 rounded-md hover:bg-[#F5E7C6] transition-colors"
           >
             Admin
-          </button>
+          </button> */}
           <button
-            onClick={() => navigate("/register")}
+            onClick={() => navigate("/admin/login")}
             className="px-4 md:px-5 py-2 rounded-md bg-[#FF6D1F] text-[#FAF3E1] font-semibold hover:opacity-90 transition-opacity"
           >
-            Get Started
+            Admin
           </button>
         </div>
       </nav>

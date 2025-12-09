@@ -18,7 +18,7 @@ import "./App.css";
 import { Toaster } from "react-hot-toast";
 // import Courses from "./pages/Courses"; // Add this import
 import ForgotPassword from "./pages/auth/ForgotPassword";
-import Profile from './pages/profile/Profile';
+import Profile from "./pages/profile/Profile";
 import AdminDashboard from "./pages/admin_auth/AdminDashboard";
 import AdminLogin from "./pages/admin_auth/AdminLogin";
 // import CodeEditor from "./pages/CodeEditor";
@@ -26,7 +26,6 @@ import AdminLogin from "./pages/admin_auth/AdminLogin";
 // import ExerciseDetail from "./components/ExerciseDetail";
 // import Devden from "./devden/devden";
 // import Byteai from "./byteai/byteai";/
-
 
 function App() {
   return (
@@ -49,24 +48,29 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/under-verification"
-              element={<UnderVerification />}
-            />
-            
+            <Route path="/under-verification" element={<UnderVerification />} />
 
-            
             {/* forgot-password */}
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route
+              path="/admin/dashboard"
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
 
             {/* profile update */}
-            <Route path="/profile" element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            } />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </div>
       </Router>
