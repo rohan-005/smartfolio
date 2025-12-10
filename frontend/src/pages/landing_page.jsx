@@ -159,7 +159,7 @@ export default function Landing() {
           transition={{ duration: 0.7 }}
         >
          
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#222222] bg-[#F5E7C6] text-2xl font-medium">
+          <div className="mt-10 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#222222] bg-[#F5E7C6] text-2xl font-medium">
             <span> SmartFolio : Portfolio &amp; Wealth Dashboard</span>
           </div>
 

@@ -35,18 +35,21 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    // Whether an admin has approved this user to access the dashboard
     isApprovedByAdmin: {
       type: Boolean,
       default: false,
     },
+    isBlacklisted: {
+      type: Boolean,
+      default: false,
+    },
+
     emailVerificationOTP: String,
     emailVerificationOTPExpire: Date,
     passwordResetOTP: String,
     passwordResetOTPExpire: Date,
     passwordResetToken: String,
     passwordResetExpire: Date,
-    
   },
   {
     timestamps: true,

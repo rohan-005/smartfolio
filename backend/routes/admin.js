@@ -5,101 +5,166 @@ const { protect, admin } = require("../middleware/auth");
 
 const router = express.Router();
 
-// Admin login endpoint
+/* ------------------------------------------
+   ADMIN LOGIN
+------------------------------------------- */
 router.post("/login", async (req, res) => {
   try {
     const { adminId, adminPass } = req.body;
 
-    // Validate input
     if (!adminId || !adminPass) {
       return res.status(400).json({
         success: false,
-        message: "Admin ID and password are required"
+        message: "Admin ID and password are required",
       });
     }
 
-    // Check credentials against .env
-    if (adminId === process.env.ADMIN_ID && adminPass === process.env.ADMIN_PASS) {
-      // Generate admin token with role: admin
+    if (
+      adminId === process.env.ADMIN_ID &&
+      adminPass === process.env.ADMIN_PASS
+    ) {
       const token = jwt.sign(
         { role: "admin", adminId },
         process.env.JWT_SECRET,
         { expiresIn: "30d" }
       );
-      
 
       return res.json({
         success: true,
-        message: "Admin login successful",
         user: {
           _id: "admin",
           name: "SmartFolio Admin",
           email: adminId,
           role: "admin",
-          isVerified: true,
-          isApprovedByAdmin: true,
         },
         token,
       });
     }
 
-    // Invalid credentials
     return res.status(401).json({
       success: false,
-      message: "Invalid admin credentials"
+      message: "Invalid admin credentials",
     });
-
   } catch (error) {
     console.error("Admin login error:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Server error during admin login"
-    });
+    res.status(500).json({ message: "Server error" });
   }
 });
 
-// Get pending users for approval
+/* ------------------------------------------
+   GET PENDING USERS
+   Includes:
+   • Verified but not approved yet
+   • Blacklisted users (as requested)
+------------------------------------------- */
 router.get("/pending-users", protect, admin, async (req, res) => {
   try {
     const users = await User.find({
       isVerified: true,
-      isApprovedByAdmin: false,
+      isApprovedByAdmin: false, // includes blacklisted users now
     }).select("-password");
+
     res.json(users);
   } catch (error) {
-    console.error("Error fetching pending users:", error);
-    res.status(500).json({ message: "Error fetching pending users" });
+    console.error("Error fetching pending:", error);
+    res.status(500).json({ message: "Error fetching pending" });
   }
 });
 
-// Approve a user
+/* ------------------------------------------
+   APPROVE A USER
+------------------------------------------- */
 router.put("/approve/:id", protect, admin, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
-    }
+
+    if (!user)
+      return res.status(404).json({ message: "User not found" });
 
     user.isApprovedByAdmin = true;
+    user.isBlacklisted = false;
+    user.approvedAt = new Date();
+
     await user.save();
-    res.json({ success: true, message: "User approved" });
+
+    return res.json({ success: true, message: "User approved" });
   } catch (error) {
-    console.error("Error approving user:", error);
-    res.status(500).json({ success: false, message: "Error approving user" });
+    console.error("Approve error:", error);
+    res.status(500).json({ message: "Error approving user" });
   }
 });
 
-// Reject/delete a user
-router.delete("/reject/:id", protect, admin, async (req, res) => {
+/* ------------------------------------------
+   GET APPROVED USERS
+------------------------------------------- */
+router.get("/approved-users", protect, admin, async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
-    }
-    res.json({ success: true, message: "User Rejected & Deleted" });
+    const users = await User.find({
+      isApprovedByAdmin: true,
+      isBlacklisted: false,
+    }).select("-password");
+
+    res.json(users);
   } catch (error) {
-    console.error("Error rejecting user:", error);
-    res.status(500).json({ success: false, message: "Error rejecting user" });
+    console.error("Approved list error:", error);
+    res.status(500).json({ message: "Error fetching approved users" });
+  }
+});
+
+/* ------------------------------------------
+   BLACKLIST APPROVED USER
+   Moves them automatically back to pending list
+------------------------------------------- */
+router.put("/blacklist/:id", protect, admin, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user)
+      return res.status(404).json({ message: "User not found" });
+
+    user.isBlacklisted = true;
+    user.isApprovedByAdmin = false;
+
+    await user.save();
+
+    res.json({ success: true, message: "User has been blacklisted" });
+  } catch (error) {
+    console.error("Blacklist error:", error);
+    res.status(500).json({ message: "Error blacklisting user" });
+  }
+});
+
+/* ------------------------------------------
+   REMOVE FROM BLACKLIST (OPTIONAL)
+------------------------------------------- */
+router.put("/unblacklist/:id", protect, admin, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user)
+      return res.status(404).json({ message: "User not found" });
+
+    user.isBlacklisted = false;
+
+    await user.save();
+
+    res.json({ success: true, message: "User removed from blacklist" });
+  } catch (error) {
+    console.error("Unblacklist error:", error);
+    res.status(500).json({ message: "Error removing blacklist" });
+  }
+});
+
+/* ------------------------------------------
+   GET BLACKLISTED USERS (Not required now but useful)
+------------------------------------------- */
+router.get("/blacklisted-users", protect, admin, async (req, res) => {
+  try {
+    const users = await User.find({ isBlacklisted: true }).select("-password");
+    res.json(users);
+  } catch (error) {
+    console.error("Blacklist fetch error:", error);
+    res.status(500).json({ message: "Error fetching blacklisted users" });
   }
 });
 

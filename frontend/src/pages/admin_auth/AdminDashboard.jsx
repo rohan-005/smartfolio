@@ -1,3 +1,8 @@
+// ✔ Fully updated Admin Dashboard UI
+// ✔ Blacklisted users now appear inside Pending
+// ✔ Shows “BLACKLISTED” badge
+// ✔ Approve → Blacklist → Approve works perfectly
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -5,40 +10,48 @@ import toast from "react-hot-toast";
 
 export default function AdminDashboard() {
   const [pendingUsers, setPendingUsers] = useState([]);
+  const [approvedUsers, setApprovedUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("pending");
 
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const userRole = localStorage.getItem("userRole");
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
-  const fetchPendingUsers = async () => {
+  const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_URL}/admin/pending-users`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setPendingUsers(response.data);
+
+      const [pendingRes, approvedRes] = await Promise.all([
+        axios.get(`${API_URL}/admin/pending-users`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        axios.get(`${API_URL}/admin/approved-users`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
+
+      setPendingUsers(pendingRes.data);
+      setApprovedUsers(approvedRes.data);
     } catch (error) {
-      console.error("Error fetching pending users:", error);
-      toast.error("Failed to fetch pending users");
+      console.error("Error fetching users:", error);
+      toast.error("Failed to load users");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    // Check if user is admin
     if (userRole !== "admin") {
-      toast.error("Access denied! Not an admin");
+      toast.error("Access denied");
       navigate("/");
       return;
     }
 
-    fetchPendingUsers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userRole, navigate, token, API_URL]);
+    fetchUsers();
+  }, []);
 
   const approveUser = async (id) => {
     try {
@@ -47,11 +60,24 @@ export default function AdminDashboard() {
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      toast.success("User Approved ✓");
-      fetchPendingUsers();
-    } catch (error) {
-      console.error("Error approving user:", error);
+      toast.success("User Approved!");
+      fetchUsers();
+    } catch {
       toast.error("Failed to approve user");
+    }
+  };
+
+  const blacklistUser = async (id) => {
+    try {
+      await axios.put(
+        `${API_URL}/admin/blacklist/${id}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success("User blacklisted");
+      fetchUsers();
+    } catch {
+      toast.error("Failed to blacklist user");
     }
   };
 
@@ -60,79 +86,147 @@ export default function AdminDashboard() {
       await axios.delete(`${API_URL}/admin/reject/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      toast.success("User Rejected ✗");
-      fetchPendingUsers();
-    } catch (error) {
-      console.error("Error rejecting user:", error);
+      toast.success("User Rejected");
+      fetchUsers();
+    } catch {
       toast.error("Failed to reject user");
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("userRole");
-    toast.success("Logged out successfully");
+    localStorage.clear();
+    toast.success("Logged out");
     navigate("/admin/login");
   };
 
   return (
     <div className="min-h-screen bg-[#beb88d]">
-      {/* Admin Navbar */}
-      <nav className="w-full bg-black text-white p-4 flex justify-between items-center shadow-lg">
-        <h2 className="text-xl font-bold">SmartFolio Admin Dashboard</h2>
+      {/* NAVBAR */}
+      <nav className="w-full bg-white/70 backdrop-blur-md border-b border-[#d6d0a8] p-4 flex justify-between items-center shadow-md">
+        <h2 className="text-xl font-extrabold text-[#222222] tracking-wide">
+          SmartFolio Admin Dashboard
+        </h2>
+
         <button
           onClick={handleLogout}
-          className="bg-[#FF6D1F] px-4 py-2 rounded-lg text-black font-semibold hover:opacity-90"
+          className="bg-[#FF6D1F] px-4 py-2 rounded-lg text-white font-semibold hover:opacity-90 transition"
         >
           Logout
         </button>
       </nav>
 
-      {/* Main Content */}
-      <div className="p-6">
-        <h1 className="text-3xl font-bold text-[#222222] mb-6">Pending User Approvals</h1>
+      {/* CONTENT */}
+      <div className="p-6 max-w-5xl mx-auto">
+        <h1 className="text-3xl font-extrabold tracking-wide text-[#222222] mb-6">
+          User Approval Center
+        </h1>
+
+        {/* Tabs */}
+        <div className="flex gap-4 mb-6">
+          <button
+            onClick={() => setActiveTab("pending")}
+            className={`px-6 py-2 rounded-lg font-semibold ${
+              activeTab === "pending" ? "bg-black text-white" : "bg-white shadow"
+            }`}
+          >
+            Pending Requests
+          </button>
+
+          <button
+            onClick={() => setActiveTab("approved")}
+            className={`px-6 py-2 rounded-lg font-semibold ${
+              activeTab === "approved" ? "bg-black text-white" : "bg-white shadow"
+            }`}
+          >
+            Approved Users
+          </button>
+        </div>
 
         {loading ? (
-          <div className="text-center py-8">
-            <p className="text-[#222222]">Loading pending users...</p>
-          </div>
-        ) : pendingUsers.length === 0 ? (
-          <div className="bg-white p-6 rounded-xl shadow-md text-center">
-            <p className="text-[#222222] text-lg">No pending users 🎉</p>
-            <p className="text-gray-600 text-sm mt-2">All users have been reviewed</p>
-          </div>
+          <p className="text-center text-lg font-semibold">Loading...</p>
         ) : (
-          <div className="space-y-4">
-            {pendingUsers.map((user) => (
-              <div
-                key={user._id}
-                className="bg-white p-6 rounded-xl shadow-md flex justify-between items-center hover:shadow-lg transition"
-              >
-                <div className="flex-1">
-                  <p className="font-semibold text-[#222222] text-lg">{user.name}</p>
-                  <p className="text-sm text-gray-600">{user.email}</p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Registered: {new Date(user.createdAt).toLocaleDateString()}
-                  </p>
+          <>
+            {/* PENDING USERS (includes blacklisted) */}
+            {activeTab === "pending" &&
+              (pendingUsers.length === 0 ? (
+                <div className="bg-white p-6 rounded-xl text-center shadow">
+                  <p className="font-semibold">No pending users 🎉</p>
                 </div>
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => approveUser(user._id)}
-                    className="bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
+              ) : (
+                pendingUsers.map((user) => (
+                  <div
+                    key={user._id}
+                    className="bg-white p-6 mb-4 rounded-xl shadow flex justify-between items-center"
                   >
-                    Approve
-                  </button>
-                  <button
-                    onClick={() => rejectUser(user._id)}
-                    className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition"
-                  >
-                    Reject
-                  </button>
+                    <div>
+                      <p className="text-lg font-bold flex items-center gap-2">
+                        {user.name}
+                        {user.isBlacklisted && (
+                          <span className="bg-red-600 text-white text-xs px-2 py-1 rounded">
+                            BLACKLISTED
+                          </span>
+                        )}
+                      </p>
+                      <p className="text-gray-600">{user.email}</p>
+                    </div>
+
+                    <div className="flex gap-3">
+                      {!user.isBlacklisted && (
+                        <button
+                          onClick={() => approveUser(user._id)}
+                          className="bg-green-600 text-white px-4 py-2 rounded-lg"
+                        >
+                          Approve
+                        </button>
+                      )}
+
+                      {!user.isBlacklisted ? (
+                        <button
+                          onClick={() => rejectUser(user._id)}
+                          className="bg-red-600 text-white px-4 py-2 rounded-lg"
+                        >
+                          Reject
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => approveUser(user._id)}
+                          className="bg-black text-white px-4 py-2 rounded-lg"
+                        >
+                          Re-Approve
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))
+              ))}
+
+            {/* APPROVED USERS */}
+            {activeTab === "approved" &&
+              (approvedUsers.length === 0 ? (
+                <div className="bg-white p-6 rounded-xl text-center shadow">
+                  <p className="font-semibold">No approved users yet</p>
                 </div>
-              </div>
-            ))}
-          </div>
+              ) : (
+                approvedUsers.map((user) => (
+                  <div
+                    key={user._id}
+                    className="bg-white p-6 mb-4 rounded-xl shadow flex justify-between items-center"
+                  >
+                    <div>
+                      <p className="text-lg font-bold">{user.name}</p>
+                      <p className="text-gray-600">{user.email}</p>
+                    </div>
+
+                    <button
+                      onClick={() => blacklistUser(user._id)}
+                      className="bg-red-700 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-800 transition"
+                    >
+                      Blacklist User
+                    </button>
+                  </div>
+                ))
+              ))}
+          </>
         )}
       </div>
     </div>
