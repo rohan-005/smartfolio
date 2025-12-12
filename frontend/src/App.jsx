@@ -5,27 +5,28 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+
 import LandingPage from "./pages/landing_page";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import OTPVerification from "./components/OTPVerification";
 import Dashboard from "./pages/profile/Dashboard";
 import UnderVerification from "./pages/auth/UnderVerification";
-// import NotFound from "./pages/NotFound";
-import "./App.css";
-import { Toaster } from "react-hot-toast";
-// import Courses from "./pages/Courses"; // Add this import
+
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import Profile from "./pages/profile/Profile";
+
 import AdminDashboard from "./pages/admin_auth/AdminDashboard";
 import AdminLogin from "./pages/admin_auth/AdminLogin";
-// import CodeEditor from "./pages/CodeEditor";
-// import CourseDetail from "./pages/CourseDetail";
-// import ExerciseDetail from "./components/ExerciseDetail";
-// import Devden from "./devden/devden";
-// import Byteai from "./byteai/byteai";/
+
+import Assets from "./pages/Assets";
+import Investments from "./pages/Investments";
+
+import "./App.css";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -33,13 +34,14 @@ function App() {
       <Router>
         <div className="App">
           <Routes>
-            {/* Public Routes */}
+            {/* -------------------- PUBLIC ROUTES -------------------- */}
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/verify-email" element={<OTPVerification />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
 
-            {/* Protected Routes */}
+            {/* -------------------- USER PROTECTED ROUTES -------------------- */}
             <Route
               path="/dashboard"
               element={
@@ -48,11 +50,39 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+            <Route
+              path="/assets"
+              element={
+                <ProtectedRoute requireAdminApproval={true}>
+                  <Assets />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/investments"
+              element={
+                <ProtectedRoute requireAdminApproval={true}>
+                  <Investments />
+                </ProtectedRoute>
+              }
+            />
+
             <Route path="/under-verification" element={<UnderVerification />} />
 
-            {/* forgot-password */}
-            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* -------------------- ADMIN ROUTES -------------------- */}
             <Route path="/admin/login" element={<AdminLogin />} />
+
             <Route
               path="/admin/dashboard"
               element={
@@ -62,18 +92,13 @@ function App() {
               }
             />
 
-            {/* profile update */}
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
+            {/* Catch All – Redirect to Home */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
       </Router>
+
+      {/* Toast Notifications */}
       <Toaster
         position="top-right"
         toastOptions={{
