@@ -80,17 +80,28 @@ router.post('/', protect, admin, async (req, res) => {
 });
 
 // Admin: remove asset
-router.delete('/:id', protect, admin, async (req, res) => {
-  try {
-    const asset = await Asset.findById(req.params.id);
-    if (!asset) return res.status(404).json({ message: 'Asset not found' });
+const Portfolio = require("../models/Portfolio");
 
-    await asset.remove();
-    res.json({ message: 'Asset removed' });
+router.delete("/:id", protect, admin, async (req, res) => {
+  try {
+    const assetId = req.params.id;
+
+    const deleted = await Asset.findByIdAndDelete(assetId);
+    if (!deleted) return res.status(404).json({ message: "Asset not found" });
+
+    // Remove asset from all portfolios
+    await Portfolio.updateMany(
+      {},
+      { $pull: { holdings: { assetId } } }
+    );
+
+    res.json({ message: "Asset removed everywhere" });
   } catch (err) {
-    console.error('Remove asset error:', err);
-    res.status(500).json({ message: 'Server error' });
+    console.error("Delete asset error:", err);
+    res.status(500).json({ message: "Server error" });
   }
 });
+
+
 
 module.exports = router;

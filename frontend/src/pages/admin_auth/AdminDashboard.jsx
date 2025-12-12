@@ -1,297 +1,501 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-// src/pages/admin_auth/AdminDashboard.jsx
-import React, { useEffect, useState } from "react";
+/* src/pages/admin_auth/AdminDashboard.jsx */
+/* eslint-disable no-empty */
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import api from "../../utils/axiosConfig";
 import toast from "react-hot-toast";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  PlusCircle,
+  Trash2,
+  Users,
+  Database,
+  CheckCircle,
+  XCircle,
+  Search
+} from "lucide-react";
+
+/**
+ * SmartFolio themed Admin Dashboard (2 tabs: Users + Assets)
+ * - Improved interactive AddAssetModal with:
+ *   • suggestion list (keyboard + mouse)
+ *   • animated dropdown, highlight, micro-interactions
+ *   • live add/delete UX + loading states
+ * - Keeps your neobrutal theme/colors/shadows
+ */
+
+/* styling helpers (keeps same theme look) */
+const card =
+  "bg-[#F5E7C6] border-2 border-[#222] rounded-2xl shadow-[4px_4px_0_rgba(34,34,34,1)] p-4";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("users");
-  
-  return (
-    <div className="min-h-screen p-6 bg-[#f8f6ef]">
-      <div className="max-w-6xl mx-auto">
-        
-        <h1 className="text-3xl font-bold mb-6">SmartFolio Admin Dashboard</h1>
 
-        {/* --- NAVIGATION TABS --- */}
-        <div className="flex gap-4 border-b mb-6 pb-3">
-          <button className={tabBtn(activeTab === "users")} onClick={() => setActiveTab("users")}>Users</button>
-          <button className={tabBtn(activeTab === "assets")} onClick={() => setActiveTab("assets")}>Assets</button>
-          <button className={tabBtn(activeTab === "investments")} onClick={() => setActiveTab("investments")}>Investments</button>
-          <button className={tabBtn(activeTab === "portfolios")} onClick={() => setActiveTab("portfolios")}>Portfolios</button>
+  return (
+    <div className="min-h-screen p-6 bg-[#beb88d] text-[#222] font-sans">
+      <div className="max-w-6xl mx-auto">
+        {/* PAGE HEADER */}
+        <h1 className="text-4xl font-extrabold mb-6 tracking-tight">SmartFolio Admin Dashboard</h1>
+
+        {/* NAV TABS */}
+        <div className="flex gap-4 border-b-2 border-[#222] pb-3 mb-6">
+          {["users", "assets"].map((tab) => (
+            <button
+              key={tab}
+              className={`px-4 py-2 font-bold text-md ${
+                activeTab === tab ? "border-b-4 border-[#FF6D1F] text-[#FF6D1F]" : "opacity-70 hover:opacity-100"
+              }`}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab === "users" ? <span className="inline-flex items-center gap-2"><Users size={16}/> Users</span> : <span className="inline-flex items-center gap-2"><Database size={16}/> Assets</span>}
+            </button>
+          ))}
         </div>
 
-        {/* --- TAB PANELS --- */}
-        {activeTab === "users" && <UsersPanel />}
-        {activeTab === "assets" && <AssetsPanel />}
-        {activeTab === "investments" && <InvestmentsPanel />}
-        {activeTab === "portfolios" && <PortfolioPanel />}
+        {/* PANELS */}
+        <div className="mt-6">
+          {activeTab === "users" && <UsersPanel />}
+          {activeTab === "assets" && <AssetsPanel />}
+        </div>
       </div>
     </div>
   );
 }
 
-function tabBtn(active) {
-  return `px-4 py-2 font-semibold ${active ? "border-b-2 border-black" : ""}`;
-}
-
-/////////////////////////////////////////////////////////////////////////////////////
-// 🟦 USERS PANEL
-/////////////////////////////////////////////////////////////////////////////////////
+/* ============================
+   USERS PANEL
+   ============================ */
 function UsersPanel() {
   const [pending, setPending] = useState([]);
   const [approved, setApproved] = useState([]);
   const [blacklisted, setBlacklisted] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
+    setLoading(true);
     try {
-      const p = await api.get("/admin/pending-users");
-      const a = await api.get("/admin/approved-users");
-      const b = await api.get("/admin/blacklisted-users");
+      const [p, a, b] = await Promise.all([
+        api.get("/admin/pending-users"),
+        api.get("/admin/approved-users"),
+        api.get("/admin/blacklisted-users"),
+      ]);
+      setPending(p.data || []);
+      setApproved(a.data || []);
+      setBlacklisted(b.data || []);
+    } catch (err) {
+      console.error("fetchData users:", err);
+      toast.error("Failed to load users");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-      setPending(p.data);
-      setApproved(a.data);
-      setBlacklisted(b.data);
-    } catch (err) { console.error(err); }
-  };
-
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const approve = async (id) => {
-    await api.put(`/admin/approve/${id}`);
-    toast.success("User approved");
-    fetchData();
+    try {
+      await api.put(`/admin/approve/${id}`);
+      toast.success("User approved");
+      fetchData();
+    } catch (err) {
+      console.error(err);
+      toast.error("Approve failed");
+    }
   };
 
   const blacklist = async (id) => {
-    await api.put(`/admin/blacklist/${id}`);
-    toast.error("User blacklisted");
-    fetchData();
+    try {
+      await api.put(`/admin/blacklist/${id}`);
+      toast.error("User blacklisted");
+      fetchData();
+    } catch (err) {
+      console.error(err);
+      toast.error("Blacklist failed");
+    }
   };
 
   const unblacklist = async (id) => {
-    await api.put(`/admin/unblacklist/${id}`);
-    toast.success("User removed from blacklist");
-    fetchData();
+    try {
+      await api.put(`/admin/unblacklist/${id}`);
+      toast.success("User removed from blacklist");
+      fetchData();
+    } catch (err) {
+      console.error(err);
+      toast.error("Operation failed");
+    }
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <motion.div
+          className="p-6 bg-[#F5E7C6] border-2 border-[#222] rounded-2xl"
+          animate={{ scale: [1, 1.03, 1] }}
+          transition={{ duration: 1.0, repeat: Infinity }}
+        >
+          Loading users...
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
-    <div>
-      {/* Pending Users */}
+    <div className="space-y-6">
       <Section title="Pending Users" count={pending.length}>
-        {pending.map((u) => (
-          <UserBox key={u._id} user={u}>
-            <button className="btn-green" onClick={() => approve(u._id)}>Approve</button>
-            <button className="btn-red" onClick={() => blacklist(u._id)}>Blacklist</button>
-          </UserBox>
-        ))}
+        {pending.length === 0 ? (
+          <EmptyHint text="No pending users" />
+        ) : (
+          pending.map((u) => (
+            <UserBox key={u._id} user={u}>
+              <OrangeBtn label={<><CheckCircle size={14}/> Approve</>} onClick={() => approve(u._id)} />
+              <RedBtn label={<><XCircle size={14}/> Blacklist</>} onClick={() => blacklist(u._id)} />
+            </UserBox>
+          ))
+        )}
       </Section>
 
-      {/* Approved Users */}
       <Section title="Approved Users" count={approved.length}>
-        {approved.map((u) => (
-          <UserBox key={u._id} user={u}>
-            <button className="btn-red" onClick={() => blacklist(u._id)}>Blacklist</button>
-          </UserBox>
-        ))}
+        {approved.length === 0 ? (
+          <EmptyHint text="No approved users" />
+        ) : (
+          approved.map((u) => (
+            <UserBox key={u._id} user={u}>
+              <RedBtn label={<><XCircle size={14}/> Blacklist</>} onClick={() => blacklist(u._id)} />
+            </UserBox>
+          ))
+        )}
       </Section>
 
-      {/* Blacklisted */}
       <Section title="Blacklisted Users" count={blacklisted.length}>
-        {blacklisted.map((u) => (
-          <UserBox key={u._id} user={u}>
-            <button className="btn-green" onClick={() => unblacklist(u._id)}>Remove</button>
-          </UserBox>
-        ))}
+        {blacklisted.length === 0 ? (
+          <EmptyHint text="No blacklisted users" />
+        ) : (
+          blacklisted.map((u) => (
+            <UserBox key={u._id} user={u}>
+              <GreenBtn label={<><CheckCircle size={14}/> Remove</>} onClick={() => unblacklist(u._id)} />
+            </UserBox>
+          ))
+        )}
       </Section>
     </div>
   );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////
-// 🟦 ASSETS PANEL
-/////////////////////////////////////////////////////////////////////////////////////
+/* ============================
+   ASSETS PANEL (with animated AddAssetModal)
+   ============================ */
 function AssetsPanel() {
   const [assets, setAssets] = useState([]);
   const [showAdd, setShowAdd] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const fetchAssets = async () => {
+    setLoading(true);
     try {
       const res = await api.get("/assets");
-      setAssets(res.data);
-    } catch (err) { console.error(err); }
+      setAssets(res.data || []);
+    } catch (err) {
+      console.error("fetchAssets:", err);
+      toast.error("Failed to load assets");
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    fetchAssets();
+  }, []);
 
   const removeAsset = async (id) => {
-    await api.delete(`/assets/${id}`);
-    toast.success("Asset removed");
-    fetchAssets();
-  };
-
-  useEffect(() => { fetchAssets(); }, []);
-
-  return (
-    <div>
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold">Platform Assets ({assets.length})</h2>
-        <button className="btn-dark" onClick={() => setShowAdd(true)}>Add Asset</button>
-      </div>
-
-      {assets.map((a) => (
-        <div key={a._id} className="flex justify-between items-center bg-white p-3 rounded shadow mb-2">
-          <div>
-            <p className="font-semibold">{a.symbol} — {a.name}</p>
-            <p className="text-sm text-gray-500">{a.assetClass}</p>
-          </div>
-          <button className="btn-red" onClick={() => removeAsset(a._id)}>Delete</button>
-        </div>
-      ))}
-
-      {showAdd && <AddAssetModal close={() => setShowAdd(false)} refresh={fetchAssets} />}
-    </div>
-  );
-}
-
-function AddAssetModal({ close, refresh }) {
-  const [name, setName] = useState("");
-  const [symbol, setSymbol] = useState("");
-  const [desc, setDesc] = useState("");
-
-  const submit = async () => {
     try {
-      await api.post("/assets", { name, symbol, description: desc });
-      toast.success("Asset added");
-      refresh();
-      close();
+      await api.delete(`/assets/${id}`);
+      toast.success("Asset deleted");
+      fetchAssets();
     } catch (err) {
-      toast.error(err.response?.data?.message || "Error adding asset");
+      console.error("removeAsset:", err);
+      toast.error("Delete failed");
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/30 flex items-center justify-center">
-      <div className="bg-white p-6 rounded w-96 shadow-lg">
-        <h3 className="text-xl font-bold mb-4">Add New Asset</h3>
-
-        <input placeholder="Symbol" className="ipt" value={symbol} onChange={(e)=>setSymbol(e.target.value)} />
-        <input placeholder="Name" className="ipt" value={name} onChange={(e)=>setName(e.target.value)} />
-        <input placeholder="Description" className="ipt" value={desc} onChange={(e)=>setDesc(e.target.value)} />
-
-        <div className="flex justify-end gap-2 mt-4">
-          <button className="btn-gray" onClick={close}>Cancel</button>
-          <button className="btn-dark" onClick={submit}>Add</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/////////////////////////////////////////////////////////////////////////////////////
-// 🟦 INVESTMENTS PANEL
-/////////////////////////////////////////////////////////////////////////////////////
-function InvestmentsPanel() {
-  const [investments, setInvestments] = useState([]);
-
-  const fetchInv = async () => {
-    try {
-      const res = await api.get("/admin/investments");
-      setInvestments(res.data);
-    } catch (err) { console.error(err); }
-  };
-
-  useEffect(() => { fetchInv(); }, []);
-
-  return (
-    <Section title="All Investments" count={investments.length}>
-      {investments.map((i) => (
-        <div key={i._id} className="flex justify-between items-center bg-white p-3 rounded shadow mb-2">
-          <div>
-            <p className="font-semibold">
-              {i.assetId?.symbol} — {i.type.toUpperCase()} by {i.userId?.email}
-            </p>
-            <p className="text-sm text-gray-500">
-              Qty: {i.quantity} • Price: ₹{i.price} • {new Date(i.createdAt).toLocaleString()}
-            </p>
-          </div>
-          <p className="font-bold">₹ {i.total.toFixed(2)}</p>
-        </div>
-      ))}
-    </Section>
-  );
-}
-
-/////////////////////////////////////////////////////////////////////////////////////
-// 🟦 PORTFOLIO PANEL
-/////////////////////////////////////////////////////////////////////////////////////
-function PortfolioPanel() {
-  const [users, setUsers] = useState([]);
-  // eslint-disable-next-line no-unused-vars
-  const [selected, setSelected] = useState(null);
-  const [portfolio, setPortfolio] = useState(null);
-
-  const fetchUsers = async () => {
-    const res = await api.get("/admin/approved-users");
-    setUsers(res.data);
-  };
-
-  const viewPortfolio = async (id) => {
-    const res = await api.get(`/portfolio/me`, { headers: { "X-USER-ID": id } });
-    setPortfolio(res.data);
-    setSelected(id);
-  };
-
-  useEffect(() => { fetchUsers(); }, []);
-
-  return (
     <div>
-      <h2 className="text-xl font-bold mb-4">User Portfolios</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="font-extrabold text-xl">Platform Assets ({assets.length})</h2>
+        <OrangeBtn label={<><PlusCircle size={14}/> Add Asset</>} onClick={() => setShowAdd(true)} />
+      </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        {/* Users list */}
-        <div className="col-span-1 bg-white rounded shadow p-3 h-[500px] overflow-auto">
-          <h3 className="font-bold mb-2">Users</h3>
-          {users.map((u) => (
-            <div key={u._id} className="flex justify-between items-center border-b py-2">
-              <p>{u.name}</p>
-              <button className="btn-dark" onClick={() => viewPortfolio(u._id)}>View</button>
+      {loading ? (
+        <div className="p-6 bg-[#F5E7C6] border-2 border-[#222] rounded-2xl">Loading assets...</div>
+      ) : assets.length === 0 ? (
+        <EmptyHint text="No assets in platform yet" />
+      ) : (
+        <div className="space-y-2">
+          {assets.map((a) => (
+            <div key={a._id} className={`${card} flex justify-between items-center`}>
+              <div>
+                <p className="font-bold">{a.symbol} — {a.name}</p>
+                <p className="text-sm opacity-70">{a.assetClass || a.description || "—"}</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <DarkBtn label={<><Search size={14}/> Price</>} onClick={async () => {
+                  try {
+                    const r = await api.get(`/assets/price/${a.symbol}`);
+                    toast.success(`${a.symbol} — ₹ ${r.data.price}`);
+                  } catch (err) {
+                    console.error(err);
+                    toast.error("Price fetch failed");
+                  }
+                }} />
+                <RedBtn label={<><Trash2 size={14}/> Delete</>} onClick={() => removeAsset(a._id)} />
+              </div>
             </div>
           ))}
         </div>
+      )}
 
-        {/* Portfolio viewer */}
-        <div className="col-span-2 bg-white rounded shadow p-4">
-          {!portfolio ? (
-            <p>Select a user</p>
-          ) : (
-            <>
-              <h3 className="font-bold mb-3">Portfolio</h3>
-              <p>Cash: ₹ {portfolio.cashBalance}</p>
-              <h4 className="mt-4 font-semibold">Holdings</h4>
-              {portfolio.holdings.length === 0 ? (
-                <p>No holdings</p>
-              ) : (
-                portfolio.holdings.map((h) => (
-                  <div key={h.assetId._id} className="border-b py-2 flex justify-between">
-                    <p>{h.assetId.symbol} — Qty: {h.quantity}</p>
-                    <p>Avg ₹ {h.avgPrice}</p>
-                  </div>
-                ))
-              )}
-            </>
-          )}
-        </div>
-      </div>
+      <AnimatePresence>
+        {showAdd && (
+          <AddAssetModal
+            onClose={() => setShowAdd(false)}
+            onAdded={() => {
+              setShowAdd(false);
+              fetchAssets();
+            }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////
-// Small Reusable Components
-/////////////////////////////////////////////////////////////////////////////////////
+/* ============================
+   AddAssetModal (interactive + animated)
+   ============================ */
+function AddAssetModal({ onClose, onAdded }) {
+  const [name, setName] = useState("");
+  const [symbol, setSymbol] = useState("");
+  const [desc, setDesc] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // show suggestions dropdown
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [activeIdx, setActiveIdx] = useState(-1);
+  const containerRef = useRef(null);
+  const inputRef = useRef(null);
+
+  // Predefined suggestions list — keep this local but can later be dynamic
+  const suggestions = [
+    { symbol: "AAPL", name: "Apple Inc.", desc: "Technology — iPhone, Mac, iPad" },
+    { symbol: "MSFT", name: "Microsoft Corp.", desc: "Technology — Windows, Azure" },
+    { symbol: "TSLA", name: "Tesla Inc.", desc: "Electric vehicles & energy" },
+    { symbol: "AMZN", name: "Amazon.com Inc.", desc: "E-commerce & cloud" },
+    { symbol: "GOOGL", name: "Alphabet Inc.", desc: "Search, Ads & Cloud" },
+    { symbol: "BTC", name: "Bitcoin", desc: "Cryptocurrency — BTC" },
+    { symbol: "ETH", name: "Ethereum", desc: "Cryptocurrency — ETH" },
+    { symbol: "NIFTY", name: "Nifty 50", desc: "Indian Index — NSE" },
+    { symbol: "GOLD", name: "Gold Spot", desc: "Commodity — Gold (XAU)" },
+  ];
+
+  // filter suggestions by typed symbol or name
+  const filtered = suggestions.filter((s) => {
+    const q = (symbol || "").toLowerCase();
+    return !q || s.symbol.toLowerCase().startsWith(q) || s.name.toLowerCase().includes(q);
+  });
+
+  // close on outside click or Esc
+  useEffect(() => {
+    function onDoc(e) {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setShowSuggestions(false);
+      }
+    }
+    function onKey(e) {
+      if (e.key === "Escape") {
+        setShowSuggestions(false);
+      }
+    }
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, []);
+
+  // keyboard navigation for suggestions
+  const handleKeyDown = (e) => {
+    if (!showSuggestions) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActiveIdx((s) => Math.min(s + 1, filtered.length - 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveIdx((s) => Math.max(s - 1, 0));
+    } else if (e.key === "Enter") {
+      if (activeIdx >= 0 && filtered[activeIdx]) {
+        pick(filtered[activeIdx]);
+      }
+    }
+  };
+
+  const pick = (s) => {
+    setSymbol(s.symbol);
+    setName(s.name);
+    setDesc(s.desc);
+    setShowSuggestions(false);
+    setActiveIdx(-1);
+    // focus next field (name)
+    setTimeout(() => inputRef.current && inputRef.current.focus(), 50);
+  };
+
+  const submit = async () => {
+    if (!symbol || !name) {
+      toast.error("Symbol & name are required");
+      return;
+    }
+    try {
+      setLoading(true);
+      await api.post("/assets", { name, symbol, description: desc });
+      toast.success("Asset added");
+      onAdded && onAdded();
+    } catch (err) {
+      console.error("Add asset:", err);
+      toast.error(err?.response?.data?.message || "Failed to add asset");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <motion.div
+        ref={containerRef}
+        className={`${card} w-full max-w-md relative`}
+        initial={{ scale: 0.95, y: 10, opacity: 0 }}
+        animate={{ scale: 1, y: 0, opacity: 1 }}
+        exit={{ scale: 0.98, y: 8, opacity: 0 }}
+        transition={{ type: "spring", stiffness: 300, damping: 22 }}
+      >
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <PlusCircle className="text-[#FF6D1F]" />
+            <h3 className="text-xl font-bold">Add New Asset</h3>
+          </div>
+          <button onClick={() => onClose && onClose()} className="text-sm px-3 py-1 rounded hover:bg-[#222]/10">Close</button>
+        </div>
+
+        {/* SYMBOL INPUT with Animated Suggestions */}
+        <div className="relative mb-3">
+          <label className="text-xs font-bold opacity-70 uppercase">Symbol</label>
+          <div className="mt-1 relative">
+            <div className="flex items-center gap-2">
+              <input
+                value={symbol}
+                onChange={(e) => {
+                  setSymbol(e.target.value.toUpperCase());
+                  setShowSuggestions(true);
+                  setActiveIdx(-1);
+                }}
+                onFocus={() => setShowSuggestions(true)}
+                onKeyDown={handleKeyDown}
+                placeholder="e.g. AAPL"
+                className="ipt pr-10"
+                autoComplete="off"
+              />
+              <div className="absolute right-3 top-2.5 opacity-60">
+                <Search size={16} />
+              </div>
+            </div>
+
+            {/* suggestions dropdown */}
+            <AnimatePresence>
+              {showSuggestions && filtered.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute left-0 right-0 mt-2 bg-[#F5E7C6] border-2 border-[#222] rounded-xl shadow-[4px_4px_0_rgba(34,34,34,1)] overflow-hidden z-40"
+                >
+                  {filtered.map((s, i) => (
+                    <motion.div
+                      key={s.symbol + i}
+                      onMouseEnter={() => setActiveIdx(i)}
+                      onMouseLeave={() => setActiveIdx(-1)}
+                      onClick={() => pick(s)}
+                      initial={false}
+                      animate={{
+                        background: activeIdx === i ? "rgba(34,34,34,0.06)" : "transparent",
+                        scale: activeIdx === i ? 1.01 : 1,
+                      }}
+                      transition={{ duration: 0.12 }}
+                      className="px-3 py-2 cursor-pointer border-b border-[#222]/10"
+                    >
+                      <div className="font-bold">{s.symbol} <span className="text-sm opacity-60 ml-2">{s.name}</span></div>
+                      <div className="text-xs opacity-70">{s.desc}</div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* NAME */}
+        <div className="mb-3">
+          <label className="text-xs font-bold opacity-70 uppercase">Name</label>
+          <input
+            ref={inputRef}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Full company / asset name"
+            className="ipt"
+          />
+        </div>
+
+        {/* DESCRIPTION */}
+        <div className="mb-4">
+          <label className="text-xs font-bold opacity-70 uppercase">Description</label>
+          <input
+            value={desc}
+            onChange={(e) => setDesc(e.target.value)}
+            placeholder="Short description or asset class"
+            className="ipt"
+          />
+        </div>
+
+        {/* ACTIONS */}
+        <div className="flex justify-end items-center gap-3">
+          <DarkBtn label="Cancel" onClick={() => onClose && onClose()} />
+          <motion.div whileTap={{ scale: 0.98 }}>
+            <OrangeBtn label={loading ? "Adding..." : "Add Asset"} onClick={submit} />
+          </motion.div>
+        </div>
+
+        {/* micro-animation / hint bar */}
+        <div className="mt-4 text-xs opacity-70 flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-[#FF6D1F]" /> Suggestions powered by local cache
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+/* ============================
+   small utilities & subcomponents
+   ============================ */
 function Section({ title, count, children }) {
   return (
-    <div className="mb-6">
-      <h2 className="text-xl font-bold mb-2">{title} ({count})</h2>
+    <div className="mb-8">
+      <h2 className="font-extrabold text-xl mb-2">{title} ({count})</h2>
       {children}
     </div>
   );
@@ -299,31 +503,90 @@ function Section({ title, count, children }) {
 
 function UserBox({ user, children }) {
   return (
-    <div className="flex justify-between items-center bg-white p-3 rounded shadow mb-2">
+    <div className={`${card} flex justify-between items-center mb-2`}>
       <div>
-        <p className="font-semibold">{user.name} • {user.email}</p>
+        <p className="font-semibold">{user.name} • <span className="text-sm opacity-70">{user.email}</span></p>
+        <div className="text-xs opacity-60 mt-1">{user.isBlacklisted ? "Blacklisted" : user.isAdmin ? "Admin" : "User"}</div>
       </div>
       <div className="flex gap-2">{children}</div>
     </div>
   );
 }
 
-// Button styles
-const btnStyle = `
-  px-3 py-1 rounded font-semibold text-white
+function EmptyHint({ text }) {
+  return <div className={`${card} text-sm opacity-70`}>{text}</div>;
+}
+
+/* ============================
+   Buttons (theme consistent)
+   ============================ */
+function OrangeBtn({ label, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className="px-4 py-2 rounded-lg bg-[#FF6D1F] text-[#FAF3E1] font-bold border-2 border-[#222] shadow-[3px_3px_0_rgba(34,34,34,1)] hover:scale-[1.02] transition inline-flex items-center gap-2"
+    >
+      {typeof label === "string" ? label : label}
+    </button>
+  );
+}
+
+function RedBtn({ label, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className="px-4 py-2 rounded-lg bg-red-600 text-white font-bold border-2 border-[#222] shadow-[3px_3px_0_rgba(34,34,34,1)] inline-flex items-center gap-2"
+    >
+      {typeof label === "string" ? label : label}
+    </button>
+  );
+}
+
+function GreenBtn({ label, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className="px-4 py-2 rounded-lg bg-green-600 text-white font-bold border-2 border-[#222] shadow-[3px_3px_0_rgba(34,34,34,1)]"
+    >
+      {typeof label === "string" ? label : label}
+    </button>
+  );
+}
+
+function DarkBtn({ label, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className="px-4 py-2 rounded-lg bg-[#222] text-[#F5E7C6] font-bold border-2 border-[#222] shadow-[3px_3px_0_rgba(34,34,34,1)] inline-flex items-center gap-2"
+    >
+      {typeof label === "string" ? label : label}
+    </button>
+  );
+}
+
+/* ============================
+   Minimal input class (keeps with your ipt global)
+   If you don't have ipt class defined in CSS, these styles give same look.
+   ============================ */
+export const _admin_dashboard_helpers = `
+.ipt {
+  width: 100%;
+  border: 1px solid rgba(34,34,34,0.08);
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: white;
+  outline: none;
+  transition: box-shadow .15s, transform .06s;
+}
+.ipt:focus {
+  box-shadow: 0 6px 0 rgba(255,109,31,0.08);
+  transform: translateY(-1px);
+  border-color: rgba(34,34,34,0.24);
+}
 `;
 
-const btnClasses = {
-  green: `${btnStyle} bg-green-600`,
-  red: `${btnStyle} bg-red-600`,
-  dark: `${btnStyle} bg-black`,
-  gray: `${btnStyle} bg-gray-400 text-black`,
-};
-
-Object.assign(window, {
-  "btn-green": btnClasses.green,
-  "btn-red": btnClasses.red,
-  "btn-dark": btnClasses.dark,
-  "btn-gray": btnClasses.gray,
-  ipt: "border p-2 rounded w-full mb-2",
-});
+/* Note:
+ - This file uses axios endpoints you already have: /admin/* and /assets
+ - AddAssetModal uses a local suggestion list; you can later replace with remote suggestions
+ - Keep your global CSS classes (ipt etc.) — a small helper style included above for reference
+*/
