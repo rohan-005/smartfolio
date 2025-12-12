@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import api from "../../utils/axiosConfig";
 import {
   User,
   Lock,
@@ -41,32 +42,22 @@ export default function Profile() {
     setMessage({});
 
     try {
-      const token = localStorage.getItem("token");
+      const res = await api.put("/auth/profile", { name: profileForm.name });
+      const data = res.data;
 
-      const res = await fetch(
-        "https://bytecode-backend.vercel.app/api/auth/profile",
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ name: profileForm.name }),
-        }
-      );
-
-      const data = await res.json();
-
-      if (res.ok) {
-        updateUser(data.user);
+      // backend may return { user: {...} } or the user object directly
+      const updatedUser = data.user || data;
+      if (updatedUser) {
+        updateUser(updatedUser);
         setMessage({ type: "success", text: "Profile updated successfully!" });
-      } else setMessage({ type: "error", text: data.message });
-
-    } catch (err) {
-      setMessage({ type: "error", text: "Something went wrong." });
+      } else {
+        setMessage({ type: "error", text: data.message || "Update failed" });
+      }
+    } catch (error) {
+      setMessage({ type: "error", text: error.response?.data?.message || "Something went wrong." });
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const changePassword = async (e) => {
@@ -87,35 +78,23 @@ export default function Profile() {
     }
 
     try {
-      const token = localStorage.getItem("token");
+      const res = await api.put("/auth/change-password", {
+        currentPassword: passwordForm.currentPassword,
+        newPassword: passwordForm.newPassword,
+      });
 
-      const res = await fetch(
-        "https://bytecode-backend.vercel.app/api/auth/change-password",
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            currentPassword: passwordForm.currentPassword,
-            newPassword: passwordForm.newPassword,
-          }),
-        }
-      );
-
-      const data = await res.json();
-
-      if (res.ok) {
-        setMessage({ type: "success", text: "Password changed successfully!" });
+      const data = res.data;
+      if (data.success || res.status === 200) {
+        setMessage({ type: "success", text: data.message || "Password changed successfully!" });
         setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
-      } else setMessage({ type: "error", text: data.message });
-
-    } catch (err) {
-      setMessage({ type: "error", text: "Something went wrong." });
+      } else {
+        setMessage({ type: "error", text: data.message || "Password change failed" });
+      }
+    } catch (error) {
+      setMessage({ type: "error", text: error.response?.data?.message || "Something went wrong." });
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const card = "bg-[#F5E7C6] border-2 border-[#222] shadow-[4px_4px_0_rgba(34,34,34,1)]";

@@ -13,10 +13,9 @@ export default function Investments() {
   const [investments, setInvestments] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Modal states
   const [sellOpen, setSellOpen] = useState(false);
   const [selected, setSelected] = useState(null);
-  const [qty, setQty] = useState(1);
-  const [price, setPrice] = useState("");
 
   const fetchInvestments = async () => {
     try {
@@ -44,9 +43,13 @@ export default function Investments() {
       return;
     }
 
-    setSelected(inv);
-    setQty(1);
-    setPrice("");
+    // store qty + price inside selected (not global)
+    setSelected({
+      ...inv,
+      qty: 1,
+      price: "",
+    });
+
     setSellOpen(true);
   };
 
@@ -57,19 +60,19 @@ export default function Investments() {
     try {
       if (!selected) return;
 
-      if (!price || price <= 0) {
+      if (!selected.price || selected.price <= 0) {
         toast.error("Enter a valid price");
         return;
       }
-      if (qty <= 0) {
+      if (selected.qty <= 0) {
         toast.error("Quantity must be at least 1");
         return;
       }
 
       await api.post("/portfolio/sell", {
         symbol: selected.assetId.symbol,
-        quantity: qty,
-        price: Number(price),
+        quantity: selected.qty,
+        price: Number(selected.price),
       });
 
       toast.success("Sold successfully!");
@@ -149,7 +152,11 @@ export default function Investments() {
                         {i.total.toLocaleString()}
                       </div>
 
-                      {!deleted && (
+                      {/* Hide sell button if: 
+                          1. Deleted asset
+                          2. The entry is already a SELL transaction
+                      */}
+                      {!deleted && i.type !== "sell" && (
                         <button
                           onClick={() => openSell(i)}
                           className="mt-1 text-sm px-3 py-1 bg-[#FF6D1F] text-[#FAF3E1] border-2 border-[#222] shadow-[2px_2px_0_rgba(34,34,34,1)]"
@@ -194,8 +201,10 @@ export default function Investments() {
                 type="number"
                 min={1}
                 max={selected.quantity}
-                value={qty}
-                onChange={(e) => setQty(Number(e.target.value))}
+                value={selected.qty}
+                onChange={(e) =>
+                  setSelected({ ...selected, qty: Number(e.target.value) })
+                }
                 className="w-full border-2 border-[#222] p-2 bg-[#FAF3E1] mb-4"
               />
 
@@ -204,16 +213,18 @@ export default function Investments() {
               <input
                 type="number"
                 min={1}
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                value={selected.price}
+                onChange={(e) =>
+                  setSelected({ ...selected, price: e.target.value })
+                }
                 placeholder="Enter price"
                 className="w-full border-2 border-[#222] p-2 bg-[#FAF3E1] mb-2"
               />
 
               {/* Total (preview) */}
-              {price && qty > 0 && (
+              {selected.price && selected.qty > 0 && (
                 <p className="font-bold text-[#FF6D1F] mb-4">
-                  Total: ₹ {(qty * price).toLocaleString()}
+                  Total: ₹ {(selected.qty * selected.price).toLocaleString()}
                 </p>
               )}
 

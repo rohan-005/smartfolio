@@ -240,7 +240,7 @@ function AssetsPanel() {
                 <p className="text-sm opacity-70">{a.assetClass || a.description || "—"}</p>
               </div>
               <div className="flex items-center gap-3">
-                <DarkBtn label={<><Search size={14}/> Price</>} onClick={async () => {
+                {/* <DarkBtn label={<><Search size={14}/> Price</>} onClick={async () => {
                   try {
                     const r = await api.get(`/assets/price/${a.symbol}`);
                     toast.success(`${a.symbol} — ₹ ${r.data.price}`);
@@ -248,7 +248,7 @@ function AssetsPanel() {
                     console.error(err);
                     toast.error("Price fetch failed");
                   }
-                }} />
+                }} /> */}
                 <RedBtn label={<><Trash2 size={14}/> Delete</>} onClick={() => removeAsset(a._id)} />
               </div>
             </div>
@@ -557,7 +557,7 @@ function DarkBtn({ label, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="px-4 py-2 bg-[#222] text-[#F5E7C6] font-bold border-2 border-[#222] shadow-[3px_3px_0_rgba(34,34,34,1)] inline-flex items-center gap-2"
+      className="px-4 py-2 bg-[#050505] text-[#F5E7C6] font-bold border-2 border-[#222] shadow-[3px_3px_0_rgba(34,34,34,1)] inline-flex items-center gap-2"
     >
       {typeof label === "string" ? label : label}
     </button>

@@ -12,14 +12,18 @@ export default function Assets() {
   const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [symbol, setSymbol] = useState("");
-  const [qty, setQty] = useState(1);
+
   const { user } = useAuth();
 
   const fetchAssets = async () => {
     try {
       setLoading(true);
       const res = await api.get("/assets");
-      setAssets(res.data);
+
+      // ADD qty state to each asset item → prevents global qty issues
+      const withQty = res.data.map((a) => ({ ...a, qty: 1 }));
+
+      setAssets(withQty);
     } catch (err) {
       console.error(err);
       toast.error("Failed to load assets");
@@ -32,7 +36,7 @@ export default function Assets() {
     fetchAssets();
   }, []);
 
-  const buy = async (s) => {
+  const buy = async (s, qty) => {
     try {
       await api.post("/portfolio/buy", { symbol: s, quantity: qty });
       toast.success("Bought successfully");
@@ -52,7 +56,8 @@ export default function Assets() {
     }
   };
 
-  const card = "bg-[#F5E7C6] border-2 border-[#222] shadow-[4px_4px_0px_rgba(34,34,34,1)]";
+  const card =
+    "bg-[#F5E7C6] border-2 border-[#222] shadow-[4px_4px_0px_rgba(34,34,34,1)]";
 
   return (
     <div className="min-h-screen w-full bg-[#beb88d] text-[#222] font-sans">
@@ -119,16 +124,24 @@ export default function Assets() {
                   </div>
 
                   <div className="flex items-center gap-3">
+                    {/* INDIVIDUAL qty per asset */}
                     <input
                       type="number"
                       min="1"
-                      value={qty}
-                      onChange={(e) => setQty(Number(e.target.value))}
+                      value={a.qty}
+                      onChange={(e) => {
+                        const newQty = Number(e.target.value);
+                        setAssets((prev) =>
+                          prev.map((x) =>
+                            x._id === a._id ? { ...x, qty: newQty } : x
+                          )
+                        );
+                      }}
                       className="w-20 border-2 border-[#222] px-2 py-1 bg-white font-bold"
                     />
 
                     <button
-                      onClick={() => buy(a.symbol)}
+                      onClick={() => buy(a.symbol, a.qty)}
                       className="px-4 py-2 bg-green-600 text-white font-bold border-2 border-[#222]"
                     >
                       Buy
