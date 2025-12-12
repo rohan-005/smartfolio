@@ -27,7 +27,7 @@ export default function AdminLogin() {
     const toastId = toast.loading("Signing in as Admin...");
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+      const API_URL = import.meta.env.VITE_API_URL || "https://smartfoliobackend.vercel.app/api";
       
       const response = await axios.post(`${API_URL}/admin/login`, {
         adminId,
