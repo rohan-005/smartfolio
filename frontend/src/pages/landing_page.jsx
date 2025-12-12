@@ -130,7 +130,7 @@ export default function Landing() {
         <div className="flex items-center gap-3 md:gap-4 text-1xl">
           <button
             onClick={() => navigate("/login")}
-            className="px-4 py-2 rounded-md hover:bg-[#F5E7C6] transition-colors"
+            className="px-4 py-2  hover:bg-[#F5E7C6] transition-colors"
           >
             Login
           </button>
@@ -142,7 +142,7 @@ export default function Landing() {
           </button> */}
           <button
             onClick={() => navigate("/admin/login")}
-            className="px-4 md:px-5 py-2 rounded-md bg-[#FF6D1F] text-[#FAF3E1] font-semibold hover:opacity-90 transition-opacity"
+            className="px-4 md:px-5 py-2  bg-[#FF6D1F] text-[#FAF3E1] font-semibold hover:opacity-90 transition-opacity"
           >
             Admin
           </button>
@@ -159,7 +159,7 @@ export default function Landing() {
           transition={{ duration: 0.7 }}
         >
          
-          <div className="mt-10 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#222222] bg-[#F5E7C6] text-2xl font-medium">
+          <div className="mt-10 inline-flex items-center gap-2 px-3 py-1  border border-[#222222] bg-[#F5E7C6] text-2xl font-medium">
             <span> SmartFolio : Portfolio &amp; Wealth Dashboard</span>
           </div>
 
@@ -179,7 +179,7 @@ export default function Landing() {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate("/register")}
-              className="px-7 py-3 rounded-lg bg-[#FF6D1F] text-[#FAF3E1] font-semibold text-sm md:text-base"
+              className="px-7 py-3  bg-[#FF6D1F] text-[#FAF3E1] font-semibold text-sm md:text-base"
             >
               Start Tracking
             </motion.button>
@@ -189,7 +189,7 @@ export default function Landing() {
 
         {/* Right: Card */}
         <motion.div
-          className="flex-1 w-full max-w-sm bg-[#F5E7C6] border border-[#222222] rounded-3xl p-6 md:p-7"
+          className="flex-1 w-full max-w-sm bg-[#F5E7C6] border border-[#222222]  p-6 md:p-7"
           initial={{ opacity: 0, scale: 0.95, x: 20 }}
           animate={{ opacity: 1, scale: 1, x: 0 }}
           transition={{ duration: 0.9 }}

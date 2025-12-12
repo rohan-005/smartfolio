@@ -81,7 +81,7 @@ export default function ForgotPassword() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#beb88d] px-6">
-      <div className="w-full max-w-md bg-[#F5E7C6] border border-[#222222] rounded-2xl p-8 shadow-lg">
+  <div className="w-full max-w-md bg-[#F5E7C6] border border-[#222222] p-8 shadow-lg">
         
         {/* Logo */}
         <div className="text-center mb-6">
@@ -103,12 +103,12 @@ export default function ForgotPassword() {
               value={email}
               onChange={handleInput}
               placeholder="you@example.com"
-              className="w-full px-4 py-3 bg-[#beb88d]/40 border border-[#222222] rounded-lg text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
+              className="w-full px-4 py-3 bg-[#beb88d]/40 border border-[#222222] text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
             />
 
             <button
               disabled={loading}
-              className="w-full py-3 bg-[#FF6D1F] text-[#FAF3E1] font-semibold rounded-lg shadow hover:opacity-90 transition"
+              className="w-full py-3 bg-[#FF6D1F] text-[#FAF3E1] font-semibold shadow hover:opacity-90 transition"
             >
               {loading ? "Sending..." : "Send OTP"}
             </button>
@@ -124,12 +124,12 @@ export default function ForgotPassword() {
               onChange={handleInput}
               maxLength={6}
               placeholder="000000"
-              className="w-full px-4 py-3 text-center tracking-[0.5em] bg-[#beb88d]/40 border border-[#222222] rounded-lg text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
+              className="w-full px-4 py-3 text-center tracking-[0.5em] bg-[#beb88d]/40 border border-[#222222] text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
             />
 
             <button
               disabled={loading}
-              className="w-full py-3 bg-[#FF6D1F] text-[#FAF3E1] rounded-lg font-semibold shadow hover:opacity-90 transition"
+              className="w-full py-3 bg-[#FF6D1F] text-[#FAF3E1] font-semibold shadow hover:opacity-90 transition"
             >
               {loading ? "Verifying..." : "Verify OTP"}
             </button>
@@ -153,7 +153,7 @@ export default function ForgotPassword() {
               value={password}
               onChange={handleInput}
               placeholder="New Password"
-              className="w-full px-4 py-3 bg-[#beb88d]/40 border border-[#222222] rounded-lg text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
+              className="w-full px-4 py-3 bg-[#beb88d]/40 border border-[#222222] text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
             />
 
             <input
@@ -162,12 +162,12 @@ export default function ForgotPassword() {
               value={confirmPassword}
               onChange={handleInput}
               placeholder="Confirm Password"
-              className="w-full px-4 py-3 bg-[#beb88d]/40 border border-[#222222] rounded-lg text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
+              className="w-full px-4 py-3 bg-[#beb88d]/40 border border-[#222222] text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
             />
 
             <button
               disabled={loading}
-              className="w-full py-3 bg-[#FF6D1F] text-[#FAF3E1] font-semibold rounded-lg shadow hover:opacity-90 transition"
+              className="w-full py-3 bg-[#FF6D1F] text-[#FAF3E1] font-semibold shadow hover:opacity-90 transition"
             >
               {loading ? "Updating..." : "Reset Password"}
             </button>

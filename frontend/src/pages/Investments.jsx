@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, ArrowDownRight, Clock } from "lucide-react";
 
 const card =
-  "bg-[#F5E7C6] border-2 border-[#222] rounded-2xl shadow-[4px_4px_0_rgba(34,34,34,1)] p-4";
+  "bg-[#F5E7C6] border-2 border-[#222] shadow-[4px_4px_0_rgba(34,34,34,1)] p-4";
 
 export default function Investments() {
   const [investments, setInvestments] = useState([]);
@@ -105,11 +105,11 @@ export default function Investments() {
                   <motion.div
                     key={i._id}
                     whileHover={{ y: -2 }}
-                    className="flex justify-between items-center p-3 bg-[#FAF3E1] border-2 border-[#222] rounded-xl shadow-[2px_2px_0_rgba(34,34,34,1)]"
+                    className="flex justify-between items-center p-3 bg-[#FAF3E1] border-2 border-[#222] shadow-[2px_2px_0_rgba(34,34,34,1)]"
                   >
                     <div className="flex items-center gap-3">
                       <div
-                        className={`p-2 rounded-md ${
+                        className={`p-2 ${
                           i.type === "buy"
                             ? "bg-green-200 text-green-900"
                             : "bg-red-200 text-red-900"
@@ -152,7 +152,7 @@ export default function Investments() {
                       {!deleted && (
                         <button
                           onClick={() => openSell(i)}
-                          className="mt-1 text-sm px-3 py-1 bg-[#FF6D1F] text-[#FAF3E1] rounded-lg border-2 border-[#222] shadow-[2px_2px_0_rgba(34,34,34,1)]"
+                          className="mt-1 text-sm px-3 py-1 bg-[#FF6D1F] text-[#FAF3E1] border-2 border-[#222] shadow-[2px_2px_0_rgba(34,34,34,1)]"
                         >
                           Sell
                         </button>
@@ -196,7 +196,7 @@ export default function Investments() {
                 max={selected.quantity}
                 value={qty}
                 onChange={(e) => setQty(Number(e.target.value))}
-                className="w-full border-2 border-[#222] p-2 rounded-lg bg-[#FAF3E1] mb-4"
+                className="w-full border-2 border-[#222] p-2 bg-[#FAF3E1] mb-4"
               />
 
               {/* Custom Price */}
@@ -207,7 +207,7 @@ export default function Investments() {
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 placeholder="Enter price"
-                className="w-full border-2 border-[#222] p-2 rounded-lg bg-[#FAF3E1] mb-2"
+                className="w-full border-2 border-[#222] p-2 bg-[#FAF3E1] mb-2"
               />
 
               {/* Total (preview) */}
@@ -219,14 +219,14 @@ export default function Investments() {
 
               <div className="flex justify-end gap-2">
                 <button
-                  className="px-4 py-2 bg-[#222] text-[#F5E7C6] rounded-lg border-2 border-[#222]"
+                  className="px-4 py-2 bg-[#222] text-[#F5E7C6] border-2 border-[#222]"
                   onClick={() => setSellOpen(false)}
                 >
                   Cancel
                 </button>
 
                 <button
-                  className="px-4 py-2 bg-[#FF6D1F] text-[#FAF3E1] rounded-lg border-2 border-[#222]"
+                  className="px-4 py-2 bg-[#FF6D1F] text-[#FAF3E1] border-2 border-[#222]"
                   onClick={performSell}
                 >
                   Confirm Sell

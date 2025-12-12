@@ -118,7 +118,7 @@ export default function Profile() {
     setLoading(false);
   };
 
-  const card = "bg-[#F5E7C6] border-2 border-[#222] rounded-2xl shadow-[4px_4px_0_rgba(34,34,34,1)]";
+  const card = "bg-[#F5E7C6] border-2 border-[#222] shadow-[4px_4px_0_rgba(34,34,34,1)]";
 
   return (
     <div className="min-h-screen w-full bg-[#beb88d] text-[#222] font-sans">
@@ -144,7 +144,7 @@ export default function Profile() {
 
           <button
             onClick={() => setActiveTab("profile")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold border-2 border-[#222] mb-3 transition 
+            className={`w-full flex items-center gap-3 px-4 py-3 font-bold border-2 border-[#222] mb-3 transition 
               ${activeTab === "profile" ? "bg-[#FF6D1F] text-[#FAF3E1]" : "bg-[#F5E7C6] hover:bg-[#FF6D1F]/20"}
             `}
           >
@@ -153,7 +153,7 @@ export default function Profile() {
 
           <button
             onClick={() => setActiveTab("password")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold border-2 border-[#222] transition 
+            className={`w-full flex items-center gap-3 px-4 py-3 font-bold border-2 border-[#222] transition 
               ${activeTab === "password" ? "bg-[#FF6D1F] text-[#FAF3E1]" : "bg-[#F5E7C6] hover:bg-[#FF6D1F]/20"}
             `}
           >
@@ -167,7 +167,7 @@ export default function Profile() {
           {/* ALERT */}
           {message.text && (
             <div
-              className={`p-4 rounded-xl border-2 ${
+              className={`p-4 border-2 ${
                 message.type === "success"
                   ? "bg-green-100 border-green-700 text-green-800"
                   : "bg-red-100 border-red-700 text-red-800"
@@ -190,7 +190,7 @@ export default function Profile() {
                     name="name"
                     value={profileForm.name}
                     onChange={handleProfileChange}
-                    className="w-full mt-1 px-4 py-3 border-2 border-[#222] rounded-xl bg-[#F5E7C6]"
+                    className="w-full mt-1 px-4 py-3 border-2 border-[#222] bg-[#F5E7C6]"
                     required
                   />
                 </div>
@@ -201,14 +201,14 @@ export default function Profile() {
                     type="email"
                     value={profileForm.email}
                     disabled
-                    className="w-full mt-1 px-4 py-3 border-2 border-[#222]/40 rounded-xl bg-[#ddd] cursor-not-allowed"
+                    className="w-full mt-1 px-4 py-3 border-2 border-[#222]/40 bg-[#ddd] cursor-not-allowed"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-6 py-3 rounded-xl font-bold bg-[#FF6D1F] text-[#FAF3E1] border-2 border-[#222] hover:opacity-90 transition"
+                  className="px-6 py-3 font-bold bg-[#FF6D1F] text-[#FAF3E1] border-2 border-[#222] hover:opacity-90 transition"
                 >
                   {loading ? "Updating..." : "Update Profile"}
                 </button>
@@ -229,7 +229,7 @@ export default function Profile() {
                     name="currentPassword"
                     value={passwordForm.currentPassword}
                     onChange={handlePasswordChange}
-                    className="w-full mt-1 px-4 py-3 border-2 border-[#222] rounded-xl bg-[#F5E7C6]"
+                    className="w-full mt-1 px-4 py-3 border-2 border-[#222] bg-[#F5E7C6]"
                     required
                   />
                 </div>
@@ -241,7 +241,7 @@ export default function Profile() {
                     name="newPassword"
                     value={passwordForm.newPassword}
                     onChange={handlePasswordChange}
-                    className="w-full mt-1 px-4 py-3 border-2 border-[#222] rounded-xl bg-[#F5E7C6]"
+                    className="w-full mt-1 px-4 py-3 border-2 border-[#222] bg-[#F5E7C6]"
                     required
                   />
                 </div>
@@ -253,7 +253,7 @@ export default function Profile() {
                     name="confirmPassword"
                     value={passwordForm.confirmPassword}
                     onChange={handlePasswordChange}
-                    className="w-full mt-1 px-4 py-3 border-2 border-[#222] rounded-xl bg-[#F5E7C6]"
+                    className="w-full mt-1 px-4 py-3 border-2 border-[#222] bg-[#F5E7C6]"
                     required
                   />
                 </div>
@@ -261,7 +261,7 @@ export default function Profile() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-6 py-3 rounded-xl font-bold bg-[#FF6D1F] text-[#FAF3E1] border-2 border-[#222] hover:opacity-90 transition"
+                  className="px-6 py-3 font-bold bg-[#FF6D1F] text-[#FAF3E1] border-2 border-[#222] hover:opacity-90 transition"
                 >
                   {loading ? "Changing..." : "Change Password"}
                 </button>

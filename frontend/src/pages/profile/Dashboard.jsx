@@ -40,7 +40,7 @@ import logoImg from "../../assets/logo.png";
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-[#222] p-3 rounded-lg border-2 border-[#FF6D1F]">
+      <div className="bg-[#222] p-3 border-2 border-[#FF6D1F]">
         <div className="text-xs text-[#F5E7C6] opacity-80">{label}</div>
         <div className="text-xl font-extrabold text-[#FF6D1F]">₹ {payload[0].value.toLocaleString()}</div>
       </div>
@@ -114,7 +114,7 @@ export default function Dashboard() {
     return (
       <div className="h-screen w-full flex flex-col items-center justify-center bg-[#beb88d] gap-4">
         <motion.img src={logoImg} alt="Loading" className="h-16 w-auto" animate={{ scale: [1, 1.05, 1] }} transition={{ repeat: Infinity, duration: 1.4 }} />
-        <div className="w-48 h-2 bg-[#222]/10 rounded-full overflow-hidden">
+      <div className="w-48 h-2 bg-[#222]/10 overflow-hidden">
           <motion.div className="h-full bg-[#FF6D1F]" initial={{ width: "0%" }} animate={{ width: "100%" }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }} />
         </div>
       </div>
@@ -132,7 +132,7 @@ export default function Dashboard() {
   const COLORS = ["#FF6D1F", "#222222"];
 
   // UI card styles (neobrutal)
-  const card = "bg-[#F5E7C6] border-2 border-[#222] rounded-2xl shadow-[4px_4px_0_rgba(34,34,34,1)]";
+  const card = "bg-[#F5E7C6] border-2 border-[#222] shadow-[4px_4px_0_rgba(34,34,34,1)]";
 
   // Layout: single screen on large (no-scroll). On small, allow scroll.
   const headerHeight = 72;
@@ -152,20 +152,20 @@ export default function Dashboard() {
           </Link>
 
           {/* Nav Links (compact) */}
-          <nav className="hidden md:flex items-center gap-4 font-bold text-sm uppercase tracking-wide">
-            <Link to="/dashboard" className="px-3 py-2 rounded-md hover:bg-[#F5E7C6]">Dashboard</Link>
-            <a href="/assets" target="_blank" rel="noopener noreferrer" className="px-3 py-2 rounded-md hover:bg-[#F5E7C6]">Assets ↗</a>
-            <a href="/investments" target="_blank" rel="noopener noreferrer" className="px-3 py-2 rounded-md hover:bg-[#F5E7C6]">Investments ↗</a>
+            <nav className="hidden md:flex items-center gap-4 font-bold text-sm uppercase tracking-wide">
+            <Link to="/dashboard" className="px-3 py-2 hover:bg-[#F5E7C6]">Dashboard</Link>
+            <a href="/assets" target="_blank" rel="noopener noreferrer" className="px-3 py-2 hover:bg-[#F5E7C6]">Assets ↗</a>
+            <a href="/investments" target="_blank" rel="noopener noreferrer" className="px-3 py-2 hover:bg-[#F5E7C6]">Investments ↗</a>
           </nav>
         </div>
 
         <div className="flex items-center gap-3">
-          <button className="hidden sm:flex items-center gap-2 px-3 py-2 bg-[#222] text-[#F5E7C6] rounded-xl border-2 border-transparent hover:border-[#FF6D1F]">
+          <button className="hidden sm:flex items-center gap-2 px-3 py-2 bg-[#222] text-[#F5E7C6] border-2 border-transparent hover:border-[#FF6D1F]">
             <Wallet size={16} className="text-[#FF6D1F]" /> ₹ {portfolio.cashBalance.toFixed(0)}
           </button>
 
           <div className="relative" ref={userMenuRef}>
-            <button onClick={() => setIsUserMenuOpen(s => !s)} className="flex items-center gap-2 bg-[#F5E7C6] border-2 border-[#222] px-3 py-2 rounded-xl font-bold">
+            <button onClick={() => setIsUserMenuOpen(s => !s)} className="flex items-center gap-2 bg-[#F5E7C6] border-2 border-[#222] px-3 py-2 font-bold">
               <User size={18} className="text-[#FF6D1F]" />
               <span className="hidden md:block">{user.name.split(" ")[0]}</span>
               <ChevronDown size={16} className={`${isUserMenuOpen ? "rotate-180" : ""} transition-transform`} />
@@ -173,7 +173,7 @@ export default function Dashboard() {
 
             <AnimatePresence>
               {isUserMenuOpen && (
-                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="absolute right-0 mt-2 w-48 bg-[#F5E7C6] border-2 border-[#222] rounded-xl shadow-[4px_4px_0_rgba(34,34,34,1)] overflow-hidden z-40">
+                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="absolute right-0 mt-2 w-48 bg-[#F5E7C6] border-2 border-[#222] shadow-[4px_4px_0_rgba(34,34,34,1)] overflow-hidden z-40">
                   <div className="p-3 border-b border-[#222]/10">
                     <div className="font-bold">{user.name}</div>
                     <div className="text-xs opacity-70 truncate">{user.email}</div>
@@ -210,7 +210,7 @@ export default function Dashboard() {
                       <div className="text-xs font-bold uppercase opacity-70">Net Worth</div>
                       <div className="text-2xl md:text-3xl font-extrabold mt-2">₹ {Number(totalValue).toLocaleString()}</div>
                     </div>
-                    <div className="bg-[#222] text-[#FF6D1F] p-2 rounded-lg">
+                    <div className="bg-[#222] text-[#FF6D1F] p-2">
                       <Briefcase size={18} />
                     </div>
                   </div>
@@ -223,7 +223,7 @@ export default function Dashboard() {
                       <div className="text-xs font-bold uppercase opacity-70">Invested</div>
                       <div className="text-2xl md:text-3xl font-extrabold mt-2">₹ {Number(holdingsValue).toLocaleString()}</div>
                     </div>
-                    <div className="bg-[#222] text-[#FF6D1F] p-2 rounded-lg">
+                    <div className="bg-[#222] text-[#FF6D1F] p-2">
                       <TrendingUp size={18} />
                     </div>
                   </div>
@@ -236,7 +236,7 @@ export default function Dashboard() {
                       <div className="text-xs font-bold uppercase opacity-70">Assets</div>
                       <div className="text-2xl md:text-3xl font-extrabold mt-2">{portfolio.holdings.length}</div>
                     </div>
-                    <div className="bg-[#222] text-[#FF6D1F] p-2 rounded-lg">
+                    <div className="bg-[#222] text-[#FF6D1F] p-2">
                       <Layers size={18} />
                     </div>
                   </div>
@@ -252,13 +252,13 @@ export default function Dashboard() {
                     <div className="text-xs opacity-70">Last 7 days</div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <select className="bg-transparent border-2 border-[#222] rounded-lg px-3 py-1 text-sm">
+                    <select className="bg-transparent border-2 border-[#222] px-3 py-1 text-sm">
                       <option>Week</option>
                       <option>Month</option>
                       <option>Year</option>
                     </select>
-                    <button onClick={() => window.open('/assets','_blank')} className="px-3 py-1 rounded-md border-2 border-[#222]">Browse</button>
-                    <button onClick={() => window.open('/investments','_blank')} className="px-3 py-1 rounded-md bg-[#FF6D1F] text-[#FAF3E1]">New</button>
+                    <button onClick={() => window.open('/assets','_blank')} className="px-3 py-1 border-2 border-[#222]">Browse</button>
+                    <button onClick={() => window.open('/investments','_blank')} className="px-3 py-1 bg-[#FF6D1F] text-[#FAF3E1]">New</button>
                   </div>
                 </div>
 
@@ -327,7 +327,7 @@ export default function Dashboard() {
                       miniInvest.map(i => (
                         <div key={i._id} className="flex justify-between items-center">
                           <div className="flex items-center gap-3">
-                            <div className={`p-2 rounded-md ${i.type==='buy' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                            <div className={`p-2 ${i.type==='buy' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
                               {i.type === 'buy' ? <ArrowUpRight size={14}/> : <TrendingUp size={14} />}
                             </div>
                             <div>
@@ -381,7 +381,7 @@ export default function Dashboard() {
                     {allocation.map((a, i) => (
                       <div key={i} className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
-                          <span style={{ width: 10, height: 10, borderRadius: 6, background: COLORS[i] }} />
+                          <span style={{ width: 10, height: 10, background: COLORS[i] }} />
                           <div className="text-md">{a.name}</div>
                         </div>
                         <div className="font-semibold">{totalValue ? Math.round((a.value/totalValue)*100) : 0}%</div>
@@ -399,9 +399,9 @@ export default function Dashboard() {
                 </div>
 
                 <div className="flex flex-col gap-3 mt-2">
-                  <button onClick={() => window.open('/assets','_blank')} className="px-3 py-2 rounded-md border-2 border-[#222] text-left">Browse Assets</button>
-                  <button onClick={() => window.open('/investments','_blank')} className="px-3 py-2 rounded-md bg-[#FF6D1F] text-[#FAF3E1]">New Investment</button>
-                  <button onClick={() => toast('Exported CSV (demo)')} className="px-3 py-2 rounded-md border-2 border-[#222]">Export CSV</button>
+                  <button onClick={() => window.open('/assets','_blank')} className="px-3 py-2 border-2 border-[#222] text-left">Browse Assets</button>
+                  <button onClick={() => window.open('/investments','_blank')} className="px-3 py-2 bg-[#FF6D1F] text-[#FAF3E1]">New Investment</button>
+                  <button onClick={() => toast('Exported CSV (demo)')} className="px-3 py-2 border-2 border-[#222]">Export CSV</button>
                 </div>
 
               </motion.div>

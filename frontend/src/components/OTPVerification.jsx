@@ -131,10 +131,10 @@ export default function OTPVerification() {
   return (
     <div className="min-h-screen bg-[#beb88d] flex items-center justify-center p-6 relative overflow-hidden">
       {/* Soft background blobs */}
-      <div className="absolute -top-20 -left-20 w-64 h-64 rounded-full bg-[#F5E7C6] opacity-40 blur-2xl" />
-      <div className="absolute -bottom-20 -right-20 w-64 h-64 rounded-full bg-[#F5E7C6] opacity-30 blur-2xl" />
+  <div className="absolute -top-20 -left-20 w-64 h-64 bg-[#F5E7C6] opacity-40 blur-2xl" />
+  <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-[#F5E7C6] opacity-30 blur-2xl" />
 
-      <div className="relative w-full max-w-md bg-[#F5E7C6] border border-[#222222] rounded-3xl p-8 shadow-xl z-10">
+  <div className="relative w-full max-w-md bg-[#F5E7C6] border border-[#222222] p-8 shadow-xl z-10">
         {/* Header */}
         <div className="text-center mb-6">
           <div className="flex justify-center mb-3">
@@ -154,14 +154,14 @@ export default function OTPVerification() {
 
         {/* SUCCESS MESSAGE */}
         {message && (
-          <div className="mb-4 p-3 rounded-md border border-[#28a745] bg-[#d1f0d6] text-[#155724]">
+          <div className="mb-4 p-3 border border-[#28a745] bg-[#d1f0d6] text-[#155724]">
             ✔ {message}
           </div>
         )}
 
         {/* ERROR MESSAGE */}
         {error && (
-          <div className="mb-4 p-3 rounded-md border border-[#8b1e1e] bg-[#ffd7d7] text-[#7a0000]">
+          <div className="mb-4 p-3 border border-[#8b1e1e] bg-[#ffd7d7] text-[#7a0000]">
             ⚠ {error}
           </div>
         )}
@@ -179,7 +179,7 @@ export default function OTPVerification() {
               onFocus={(e) => e.target.select()}
               onChange={(e) => handleOtpChange(e.target.value, i)}
               onKeyDown={(e) => handleKeyDown(e, i)}
-              className="w-12 h-12 border border-[#222222] rounded-md text-center text-lg font-semibold bg-white text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
+              className="w-12 h-12 border border-[#222222] text-center text-lg font-semibold bg-white text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
             />
           ))}
         </div>
@@ -188,7 +188,7 @@ export default function OTPVerification() {
         <button
           onClick={handleVerifyOTP}
           disabled={loading || otp.join("").length !== 6}
-          className="w-full py-3 rounded-lg bg-[#FF6D1F] text-[#FAF3E1] font-semibold transition hover:opacity-90 disabled:opacity-50"
+          className="w-full py-3 bg-[#FF6D1F] text-[#FAF3E1] font-semibold transition hover:opacity-90 disabled:opacity-50"
         >
           {loading ? "Verifying..." : "Verify Email"}
         </button>

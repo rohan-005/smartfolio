@@ -67,7 +67,7 @@ export default function AdminLogin() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#beb88d] px-6">
       <div
-        className="w-full max-w-md bg-[#F5E7C6] border border-[#222222] rounded-2xl p-8 shadow-lg"
+        className="w-full max-w-md bg-[#F5E7C6] border border-[#222222] p-8 shadow-lg"
         style={{ animation: "slideIn 0.3s ease-in-out" }}
       >
         <div className="text-center">
@@ -85,7 +85,7 @@ export default function AdminLogin() {
               value={adminId}
               onChange={handleInput}
               placeholder="Enter admin ID"
-              className="mt-1 w-full px-4 py-3 rounded-lg border border-[#222222] bg-[#beb88d]/40 text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
+              className="mt-1 w-full px-4 py-3 border border-[#222222] bg-[#beb88d]/40 text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
             />
           </div>
 
@@ -99,14 +99,14 @@ export default function AdminLogin() {
               value={adminPass}
               onChange={handleInput}
               placeholder="••••••••"
-              className="mt-1 w-full px-4 py-3 rounded-lg border border-[#222222] bg-[#beb88d]/40 text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
+              className="mt-1 w-full px-4 py-3 border border-[#222222] bg-[#beb88d]/40 text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
             />
           </div>
 
           <button
             disabled={loading}
             type="submit"
-            className="w-full py-3 bg-[#FF6D1F] text-[#FAF3E1] font-semibold rounded-lg shadow hover:opacity-90 transition disabled:opacity-50"
+            className="w-full py-3 bg-[#FF6D1F] text-[#FAF3E1] font-semibold shadow hover:opacity-90 transition disabled:opacity-50"
           >
             {loading ? "Signing In..." : "Login as Admin"}
           </button>

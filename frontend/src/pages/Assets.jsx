@@ -52,7 +52,7 @@ export default function Assets() {
     }
   };
 
-  const card = "bg-[#F5E7C6] border-2 border-[#222] rounded-2xl shadow-[4px_4px_0px_rgba(34,34,34,1)]";
+  const card = "bg-[#F5E7C6] border-2 border-[#222] shadow-[4px_4px_0px_rgba(34,34,34,1)]";
 
   return (
     <div className="min-h-screen w-full bg-[#beb88d] text-[#222] font-sans">
@@ -75,7 +75,7 @@ export default function Assets() {
           <h1 className="font-extrabold text-2xl mb-4">Search Asset Price</h1>
 
           <div className="flex flex-col sm:flex-row gap-3">
-            <div className="flex items-center gap-2 bg-[#fff] rounded-xl border-2 border-[#222] px-3 py-2 w-full">
+            <div className="flex items-center gap-2 bg-[#fff] border-2 border-[#222] px-3 py-2 w-full">
               <Search size={18} />
               <input
                 value={symbol}
@@ -87,7 +87,7 @@ export default function Assets() {
 
             <button
               onClick={() => checkPrice(symbol)}
-              className="px-5 py-3 bg-[#FF6D1F] text-[#FAF3E1] font-bold rounded-xl border-2 border-[#222] hover:opacity-90"
+              className="px-5 py-3 bg-[#FF6D1F] text-[#FAF3E1] font-bold border-2 border-[#222] hover:opacity-90"
             >
               Check
             </button>
@@ -110,7 +110,7 @@ export default function Assets() {
                 <motion.div
                   key={a._id}
                   whileHover={{ scale: 1.01 }}
-                  className="flex justify-between items-center p-3 rounded-xl bg-[#beb88d]/20 border-2 border-transparent hover:border-[#FF6D1F] transition"
+                  className="flex justify-between items-center p-3 bg-[#beb88d]/20 border-2 border-transparent hover:border-[#FF6D1F] transition"
                 >
                   <div>
                     <div className="text-lg font-extrabold">{a.symbol}</div>
@@ -124,19 +124,19 @@ export default function Assets() {
                       min="1"
                       value={qty}
                       onChange={(e) => setQty(Number(e.target.value))}
-                      className="w-20 border-2 border-[#222] rounded-xl px-2 py-1 bg-white font-bold"
+                      className="w-20 border-2 border-[#222] px-2 py-1 bg-white font-bold"
                     />
 
                     <button
                       onClick={() => buy(a.symbol)}
-                      className="px-4 py-2 bg-green-600 text-white rounded-xl font-bold border-2 border-[#222]"
+                      className="px-4 py-2 bg-green-600 text-white font-bold border-2 border-[#222]"
                     >
                       Buy
                     </button>
 
                     <button
                       onClick={() => checkPrice(a.symbol)}
-                      className="px-4 py-2 bg-[#F5E7C6] rounded-xl border-2 border-[#222] hover:bg-[#FF6D1F]/20"
+                      className="px-4 py-2 bg-[#F5E7C6] border-2 border-[#222] hover:bg-[#FF6D1F]/20"
                     >
                       Price
                     </button>
@@ -193,21 +193,21 @@ function AddAssetForm({ onAdded }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
       <input
-        className="border-2 border-[#222] p-3 rounded-xl bg-white font-bold"
+        className="border-2 border-[#222] p-3 bg-white font-bold"
         placeholder="Symbol"
         value={symbol}
         onChange={(e) => setSymbol(e.target.value)}
       />
 
       <input
-        className="border-2 border-[#222] p-3 rounded-xl bg-white font-bold"
+        className="border-2 border-[#222] p-3 bg-white font-bold"
         placeholder="Name"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
 
       <input
-        className="border-2 border-[#222] p-3 rounded-xl bg-white font-bold"
+        className="border-2 border-[#222] p-3 bg-white font-bold"
         placeholder="Description"
         value={desc}
         onChange={(e) => setDesc(e.target.value)}
@@ -216,7 +216,7 @@ function AddAssetForm({ onAdded }) {
       <div className="col-span-full flex justify-end">
         <button
           onClick={submit}
-          className="px-5 py-3 bg-[#FF6D1F] text-[#FAF3E1] font-bold rounded-xl border-2 border-[#222] hover:opacity-90"
+          className="px-5 py-3 bg-[#FF6D1F] text-[#FAF3E1] font-bold border-2 border-[#222] hover:opacity-90"
         >
           Add Asset
         </button>

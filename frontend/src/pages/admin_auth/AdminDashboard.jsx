@@ -27,7 +27,7 @@ import {
 
 /* styling helpers (keeps same theme look) */
 const card =
-  "bg-[#F5E7C6] border-2 border-[#222] rounded-2xl shadow-[4px_4px_0_rgba(34,34,34,1)] p-4";
+  "bg-[#F5E7C6] border-2 border-[#222] shadow-[4px_4px_0_rgba(34,34,34,1)] p-4";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("users");
@@ -130,9 +130,9 @@ function UsersPanel() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-8">
+        <div className="flex items-center justify-center p-8">
         <motion.div
-          className="p-6 bg-[#F5E7C6] border-2 border-[#222] rounded-2xl"
+          className="p-6 bg-[#F5E7C6] border-2 border-[#222]"
           animate={{ scale: [1, 1.03, 1] }}
           transition={{ duration: 1.0, repeat: Infinity }}
         >
@@ -228,7 +228,7 @@ function AssetsPanel() {
       </div>
 
       {loading ? (
-        <div className="p-6 bg-[#F5E7C6] border-2 border-[#222] rounded-2xl">Loading assets...</div>
+        <div className="p-6 bg-[#F5E7C6] border-2 border-[#222]">Loading assets...</div>
       ) : assets.length === 0 ? (
         <EmptyHint text="No assets in platform yet" />
       ) : (
@@ -423,7 +423,7 @@ function AddAssetModal({ onClose, onAdded }) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute left-0 right-0 mt-2 bg-[#F5E7C6] border-2 border-[#222] rounded-xl shadow-[4px_4px_0_rgba(34,34,34,1)] overflow-hidden z-40"
+                  className="absolute left-0 right-0 mt-2 bg-[#F5E7C6] border-2 border-[#222] shadow-[4px_4px_0_rgba(34,34,34,1)] overflow-hidden z-40"
                 >
                   {filtered.map((s, i) => (
                     <motion.div
@@ -482,7 +482,7 @@ function AddAssetModal({ onClose, onAdded }) {
 
         {/* micro-animation / hint bar */}
         <div className="mt-4 text-xs opacity-70 flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-[#FF6D1F]" /> Suggestions powered by local cache
+          <div className="w-2 h-2 bg-[#FF6D1F]" /> Suggestions powered by local cache
         </div>
       </motion.div>
     </motion.div>
@@ -524,7 +524,7 @@ function OrangeBtn({ label, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="px-4 py-2 rounded-lg bg-[#FF6D1F] text-[#FAF3E1] font-bold border-2 border-[#222] shadow-[3px_3px_0_rgba(34,34,34,1)] hover:scale-[1.02] transition inline-flex items-center gap-2"
+      className="px-4 py-2 bg-[#FF6D1F] text-[#FAF3E1] font-bold border-2 border-[#222] shadow-[3px_3px_0_rgba(34,34,34,1)] hover:scale-[1.02] transition inline-flex items-center gap-2"
     >
       {typeof label === "string" ? label : label}
     </button>
@@ -535,7 +535,7 @@ function RedBtn({ label, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="px-4 py-2 rounded-lg bg-red-600 text-white font-bold border-2 border-[#222] shadow-[3px_3px_0_rgba(34,34,34,1)] inline-flex items-center gap-2"
+      className="px-4 py-2 bg-red-600 text-white font-bold border-2 border-[#222] shadow-[3px_3px_0_rgba(34,34,34,1)] inline-flex items-center gap-2"
     >
       {typeof label === "string" ? label : label}
     </button>
@@ -546,7 +546,7 @@ function GreenBtn({ label, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="px-4 py-2 rounded-lg bg-green-600 text-white font-bold border-2 border-[#222] shadow-[3px_3px_0_rgba(34,34,34,1)]"
+      className="px-4 py-2 bg-green-600 text-white font-bold border-2 border-[#222] shadow-[3px_3px_0_rgba(34,34,34,1)]"
     >
       {typeof label === "string" ? label : label}
     </button>
@@ -557,7 +557,7 @@ function DarkBtn({ label, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="px-4 py-2 rounded-lg bg-[#222] text-[#F5E7C6] font-bold border-2 border-[#222] shadow-[3px_3px_0_rgba(34,34,34,1)] inline-flex items-center gap-2"
+      className="px-4 py-2 bg-[#222] text-[#F5E7C6] font-bold border-2 border-[#222] shadow-[3px_3px_0_rgba(34,34,34,1)] inline-flex items-center gap-2"
     >
       {typeof label === "string" ? label : label}
     </button>

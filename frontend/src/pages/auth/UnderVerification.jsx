@@ -5,7 +5,7 @@ import logo from '../../assets/logo.png';
 export default function UnderVerification() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#beb88d] px-6">
-      <div className="max-w-md w-full bg-[#F5E7C6] border border-[#222222] rounded-2xl p-8 shadow-lg text-center">
+  <div className="max-w-md w-full bg-[#F5E7C6] border border-[#222222] p-8 shadow-lg text-center">
         
         {/* Logo */}
         <img src={logo} alt="SmartFolio" className="w-20 h-20 mx-auto mb-4" />
@@ -30,7 +30,7 @@ export default function UnderVerification() {
         {/* Back to Login Button */}
         <Link 
           to="/login"
-          className="inline-block w-full py-3 bg-[#FF6D1F] text-[#FAF3E1] font-semibold rounded-lg shadow hover:opacity-90 transition"
+          className="inline-block w-full py-3 bg-[#FF6D1F] text-[#FAF3E1] font-semibold shadow hover:opacity-90 transition"
         >
           Back to Login
         </Link>

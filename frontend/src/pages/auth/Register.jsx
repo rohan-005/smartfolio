@@ -60,7 +60,7 @@ export default function Register() {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md bg-[#F5E7C6] border border-[#222222] rounded-2xl p-8 shadow-lg"
+        className="w-full max-w-md bg-[#F5E7C6] border border-[#222222] p-8 shadow-lg"
       >
         <div className="text-center">
           <img src={logo} alt="SmartFolio" className="w-20 mx-auto mb-4" />
@@ -78,7 +78,7 @@ export default function Register() {
             value={name}
             onChange={handleInput}
             placeholder="Full Name"
-            className="w-full px-4 py-3 bg-[#beb88d]/40 border border-[#222222] rounded-lg text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
+            className="w-full px-4 py-3 bg-[#beb88d]/40 border border-[#222222] text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
           />
 
           <input
@@ -87,7 +87,7 @@ export default function Register() {
             value={email}
             onChange={handleInput}
             placeholder="you@example.com"
-            className="w-full px-4 py-3 bg-[#beb88d]/40 border border-[#222222] rounded-lg text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
+            className="w-full px-4 py-3 bg-[#beb88d]/40 border border-[#222222] text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
           />
 
           <input
@@ -96,7 +96,7 @@ export default function Register() {
             value={password}
             onChange={handleInput}
             placeholder="••••••••"
-            className="w-full px-4 py-3 bg-[#beb88d]/40 border border-[#222222] rounded-lg text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
+            className="w-full px-4 py-3 bg-[#beb88d]/40 border border-[#222222] text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
           />
 
           <input
@@ -105,13 +105,13 @@ export default function Register() {
             value={confirmPassword}
             onChange={handleInput}
             placeholder="••••••••"
-            className="w-full px-4 py-3 bg-[#beb88d]/40 border border-[#222222] rounded-lg text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
+            className="w-full px-4 py-3 bg-[#beb88d]/40 border border-[#222222] text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#FF6D1F]"
           />
 
           <motion.button
             whileTap={{ scale: 0.97 }}
             disabled={loading}
-            className="w-full py-3 bg-[#FF6D1F] text-[#FAF3E1] font-semibold rounded-lg shadow hover:opacity-90 transition disabled:opacity-50"
+            className="w-full py-3 bg-[#FF6D1F] text-[#FAF3E1] font-semibold shadow hover:opacity-90 transition disabled:opacity-50"
           >
             {loading ? "Creating..." : "Create Account"}
           </motion.button>
