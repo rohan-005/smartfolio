@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // For Vite projects, use import.meta.env
-let API_URL = import.meta.env.VITE_API_URL || 'https://bytecode-backend.vercel.app/api';
+let API_URL = import.meta.env.VITE_API_URL || 'https://smartfoliobackend.vercel.app/api';
 // Normalize: ensure the base URL ends with /api so front-end calls go to /api/...
 API_URL = API_URL ? API_URL.replace(/\/+$/, '') : API_URL; // trim trailing slashes
 if (API_URL && !API_URL.endsWith('/api')) {

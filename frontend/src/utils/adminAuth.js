@@ -6,6 +6,6 @@ export const getAdminToken = () => {
   return localStorage.getItem("adminToken");
 };
 
-export const removeAdminToken = () => {
-  localStorage.removeItem("adminToken");
-};
+// export const removeAdminToken = () => {
+//   localStorage.removeItem("adminToken");
+// };
