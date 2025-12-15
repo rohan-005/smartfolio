@@ -357,7 +357,7 @@ router.put('/change-password', [
   }
 });
 
-module.exports = router;
+
 
 // Admin routes: approve user
 // PUT /api/auth/admin/approve/:id
@@ -388,3 +388,5 @@ router.put('/admin/approve/:id', protect, async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+module.exports = router;
