@@ -209,7 +209,7 @@ export default function Investments() {
               />
 
               {/* Custom Price */}
-              <label className="text-sm font-bold">Price (your custom price)</label>
+              {/* <label className="text-sm font-bold">Price (your custom price)</label>
               <input
                 type="number"
                 min={1}
@@ -219,7 +219,7 @@ export default function Investments() {
                 }
                 placeholder="Enter price"
                 className="w-full border-2 border-[#222] p-2 bg-[#FAF3E1] mb-2"
-              />
+              /> */}
 
               {/* Total (preview) */}
               {selected.price && selected.qty > 0 && (
