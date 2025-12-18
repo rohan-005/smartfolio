@@ -258,7 +258,7 @@ export default function Dashboard() {
                       <option>Year</option>
                     </select>
                     <button onClick={() => window.open('/assets','_blank')} className="px-3 py-1 border-2 border-[#222]">Browse</button>
-                    <button onClick={() => window.open('/investments','_blank')} className="px-3 py-1 bg-[#FF6D1F] text-[#FAF3E1]">New</button>
+                    <button onClick={() => window.open('/assets','_blank')} className="px-3 py-1 bg-[#FF6D1F] text-[#FAF3E1]">New</button>
                   </div>
                 </div>
 
@@ -287,7 +287,7 @@ export default function Dashboard() {
                 <motion.div className={`${card} p-4`} whileHover={{ y: -3 }}>
                   <div className="flex items-center justify-between mb-3">
                     <div className="font-bold">Top Holdings</div>
-                    <Link to="/assets" className="text-sm text-[#FF6D1F]">Manage ↗</Link>
+                    <Link to="/investements" className="text-sm text-[#FF6D1F]">Manage ↗</Link>
                   </div>
                   <div className="space-y-2">
                     {miniHoldings.length === 0 ? (
