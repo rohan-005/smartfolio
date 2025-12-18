@@ -287,7 +287,7 @@ export default function Dashboard() {
                 <motion.div className={`${card} p-4`} whileHover={{ y: -3 }}>
                   <div className="flex items-center justify-between mb-3">
                     <div className="font-bold">Top Holdings</div>
-                    <Link to="/investements" className="text-sm text-[#FF6D1F]">Manage ↗</Link>
+                    <Link to="/investments" className="text-sm text-[#FF6D1F]">Manage ↗</Link>
                   </div>
                   <div className="space-y-2">
                     {miniHoldings.length === 0 ? (
@@ -400,7 +400,7 @@ export default function Dashboard() {
 
                 <div className="flex flex-col gap-3 mt-2">
                   <button onClick={() => window.open('/assets','_blank')} className="px-3 py-2 border-2 border-[#222] text-left">Browse Assets</button>
-                  <button onClick={() => window.open('/investments','_blank')} className="px-3 py-2 bg-[#FF6D1F] text-[#FAF3E1]">New Investment</button>
+                  <button onClick={() => window.open('/assets','_blank')} className="px-3 py-2 bg-[#FF6D1F] text-[#FAF3E1]">New Investment</button>
                   {/* <button onClick={() => toast('Exported CSV (demo)')} className="px-3 py-2 border-2 border-[#222]">Export CSV</button> */}
                 </div>
 
